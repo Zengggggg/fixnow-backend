@@ -35,4 +35,5 @@ public class Document {
     @ManyToOne(fetch = FetchType.LAZY) // Lazy fetching is generally preferred
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
 } 
