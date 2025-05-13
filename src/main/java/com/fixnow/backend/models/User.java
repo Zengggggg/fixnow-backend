@@ -1,5 +1,6 @@
 package com.fixnow.backend.models;
 
+import com.fixnow.backend.mun.Provider;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,11 +22,17 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
     private String password; // Remember to hash passwords in a real application!
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Provider provider;
+
+    private String providerId;
+
 
     // You can add more fields like roles, creation date, etc.
 } 

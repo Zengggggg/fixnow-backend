@@ -1,20 +1,33 @@
 package com.fixnow.backend.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fixnow.backend.dtos.request.GoogleTokenRequest;
 import com.fixnow.backend.dtos.request.LoginRequestDto;
 import com.fixnow.backend.dtos.request.UserRegistrationDto;
 import com.fixnow.backend.dtos.response.UserResponseDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
 import com.fixnow.backend.models.User;
+import com.fixnow.backend.services.GoogleAuthService;
 import com.fixnow.backend.services.UserService;
 import com.fixnow.backend.util.JwtUtil;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.fixnow.backend.dtos.response.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/auth") // Base path for authentication related endpoints
 @RequiredArgsConstructor
@@ -23,6 +36,11 @@ public class AuthController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder; // Needed for login check
     private final JwtUtil jwtUtil; // Inject JwtUtil
+    private final GoogleAuthService googleAuthService;
+
+//    @Value("${google.client.id}")
+    private final String clientId = "424612164457-pmskbghvkdihh8lcs63odsb17bhukfs5.apps.googleusercontent.com";
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
@@ -72,5 +90,11 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user.");
         }
+    }
+    @PostMapping("/google")
+    public ResponseEntity<AuthenticationResponse> authenticateWithGoogle(
+            @RequestBody GoogleTokenRequest googleTokenRequest) throws JsonProcessingException {
+        AuthenticationResponse response = googleAuthService.authenticate(googleTokenRequest.getToken());
+            return ResponseEntity.ok(response);
     }
 } 

@@ -25,9 +25,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Permit registration and login
+                        .requestMatchers("/api/auth/register", "/api/auth/login","/test-function/ai","/api/auth/google").permitAll() // Permit registration and login
                         .anyRequest().authenticated() // Secure all other endpoints
                 )
+                .oauth2Login(oath2 -> oath2.defaultSuccessUrl("http://localhost:3000/dashboard", true))
                 .httpBasic(withDefaults()); // Or configure JWT/other auth methods
         return http.build();
     }

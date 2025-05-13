@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtUtil {
 
     // !!! IMPORTANT: Use a strong, securely stored secret key in production! Load from config. !!!
-    // For demo purposes, using a temporary key generated on startup:
+    // For demo purposes, using a temporary key gen erated on startup:
     @SuppressWarnings("deprecation") // Suppress warning for intended use
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512); // Reverted to original
     private final long expirationMs = 86400000; // 24 hours
