@@ -1,35 +1,24 @@
 package com.fixnow.backend.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fixnow.backend.dtos.request.GoogleTokenRequest;
 import com.fixnow.backend.dtos.request.LoginRequestDto;
 import com.fixnow.backend.dtos.request.UserRegistrationDto;
-import com.fixnow.backend.dtos.response.UserResponseDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
 import com.fixnow.backend.models.User;
 import com.fixnow.backend.services.GoogleAuthService;
 import com.fixnow.backend.services.UserService;
 import com.fixnow.backend.util.JwtUtil;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.fixnow.backend.dtos.response.AuthenticationResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-@CrossOrigin(origins = "http://localhost:3000")
-@RestController
-@RequestMapping("/api/auth") // Base path for authentication related endpoints
+@Slf4j
+@Controller
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -38,63 +27,93 @@ public class AuthController {
     private final JwtUtil jwtUtil; // Inject JwtUtil
     private final GoogleAuthService googleAuthService;
 
-//    @Value("${google.client.id}")
-    private final String clientId = "424612164457-pmskbghvkdihh8lcs63odsb17bhukfs5.apps.googleusercontent.com";
+//    @Value("${google.client-id}")
+    private String clientId = "424612164457-pmskbghvkdihh8lcs63odsb17bhukfs5.apps.googleusercontent.com";
 
-
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new UserRegistrationDto());
+        return "auth/register"; // View name (e.g., register.html or register.jsp)
+    }
+    @PostMapping("/doRegister")
+    public String registerUser(@ModelAttribute UserRegistrationDto registrationDto,
+                               RedirectAttributes redirectAttributes) {
         try {
-            UserResponseDto registeredUser = userService.registerUser(registrationDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+            userService.registerUser(registrationDto);
+            redirectAttributes.addFlashAttribute("success", "Registration successful. Please login.");
+            log.info("User {} registered successfully", registrationDto.getUsername());
+            return "redirect:/login";
         } catch (IllegalArgumentException e) {
-            // Handle cases like username/email already exists
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/register";
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+            redirectAttributes.addFlashAttribute("error", "An unexpected error occurred."+e.getMessage());
+            return "redirect:/register";
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDto loginRequestDto) {
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        model.addAttribute("loginRequest", new LoginRequestDto());
+        return "auth/login"; // maps to /WEB-INF/views/auth/login.jsp
+    }
+
+    @PostMapping("/doLogin")
+    public String loginUser(@ModelAttribute LoginRequestDto loginRequestDto, Model model, HttpSession session) {
         try {
-            // Use findByEmail and getEmail from DTO
-            User user = userService.findByEmail(loginRequestDto.getEmail()); // Changed to findByEmail
+            User user = userService.findByEmail(loginRequestDto.getEmail());
             if (passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-                // Generate JWT with username and userId
-                String jwtToken = jwtUtil.generateToken(user.getUsername(), user.getId()); // Pass userId
-                // Return token in response
-                return ResponseEntity.ok(Map.of("token", jwtToken));
+                // Store user in session, then redirect to home
+                session.setAttribute("user", user);
+                log.info("User {} logged in successfully", user.getUsername());
+                return "redirect:/home";
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+                model.addAttribute("error", "Invalid email or password. Please try again.");
+                return "auth/login";
             }
-        } catch (jakarta.persistence.EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         } catch (Exception e) {
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login failed due to an internal error.");
+            model.addAttribute("error", "Login error occurred");
+            return "auth/login";
         }
     }
 
-    // Note: User update might belong in a UserController, but placed here for simplicity
-    // Needs proper security (e.g., check if authenticated user matches the ID)
-    @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto updateDto) {
-         // TODO: Add security check: Ensure the authenticated user is the one being updated or is an admin.
+    @GetMapping("/update")
+    public String showUpdateForm(Model model, @RequestParam("id") Long id) {
+        User user = userService.findById(id); // Assumes a method to fetch user
+        model.addAttribute("user", user);
+        return "update-user"; // View name (e.g., update-user.html)
+    }
+
+    @PostMapping("/update")
+    public String updateUser(@ModelAttribute("user") UserUpdateDto updateDto,
+                             RedirectAttributes redirectAttributes) {
         try {
-            UserResponseDto updatedUser = userService.updateUser(id, updateDto);
-            return ResponseEntity.ok(updatedUser);
+            userService.updateUser(JwtUtil.getCurrentUserId(), updateDto);
+            redirectAttributes.addFlashAttribute("success", "User updated successfully.");
+            return "redirect:/home";
         } catch (jakarta.persistence.EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/update?id=" + JwtUtil.getCurrentUserId();
         } catch (IllegalArgumentException e) {
-             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/update?id=" + JwtUtil.getCurrentUserId();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user.");
+            redirectAttributes.addFlashAttribute("error", "Failed to update user.");
+            return "redirect:/update?id=" + JwtUtil.getCurrentUserId();
         }
     }
+
     @PostMapping("/google")
-    public ResponseEntity<AuthenticationResponse> authenticateWithGoogle(
-            @RequestBody GoogleTokenRequest googleTokenRequest) throws JsonProcessingException {
-        AuthenticationResponse response = googleAuthService.authenticate(googleTokenRequest.getToken());
-            return ResponseEntity.ok(response);
+    public String authenticateWithGoogle(@RequestParam("token") String token,
+                                         HttpSession session,
+                                         RedirectAttributes redirectAttributes) {
+        try {
+            AuthenticationResponse response = googleAuthService.authenticate(token);
+            session.setAttribute("jwtToken", response.getAccessToken());
+            return "redirect:/home"; // or whatever page you want
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Google authentication failed.");
+            return "redirect:/login";
+        }
     }
 } 

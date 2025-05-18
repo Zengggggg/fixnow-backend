@@ -3,18 +3,18 @@ package com.fixnow.backend.services.impl;
 import com.fixnow.backend.dtos.request.UserRegistrationDto;
 import com.fixnow.backend.dtos.response.UserResponseDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
+import com.fixnow.backend.models.Role;
 import com.fixnow.backend.models.User;
 import com.fixnow.backend.mun.Provider;
+import com.fixnow.backend.repositories.RoleRepository;
 import com.fixnow.backend.repositories.UserRepository;
 import com.fixnow.backend.services.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +30,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     @Override
-    @Transactional // Ensure atomicity
     public UserResponseDto registerUser(UserRegistrationDto registrationDto) {
         // Check if username or email already exists
         if (userRepository.existsByUsername(registrationDto.getUsername())) {
@@ -43,16 +43,23 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(registrationDto.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-
+        Role freemiumRole = roleRepository.findByName("FREEMIUM_USER");
         User newUser = new User();
         newUser.setUsername(registrationDto.getUsername());
         newUser.setEmail(registrationDto.getEmail());
         // Encode the password before saving
         newUser.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        newUser.setProvider(Provider.LOCAL);
+        newUser.setRole(freemiumRole);
 
         User savedUser = userRepository.save(newUser);
 
         return mapUserToResponseDto(savedUser);
+    }
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 
     @Override
@@ -110,7 +117,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String loginWithGoogle(String idToken) throws GeneralSecurityException, IOException {
         GoogleIdToken.Payload payload = verifyToken(idToken);
-
+        Role freemiumRole = roleRepository.findByName("FREEMIUM_USER");
         assert payload != null;
         String email = payload.getEmail();
         String name = (String) payload.get("name");
@@ -124,7 +131,8 @@ public class UserServiceImpl implements UserService {
                                 "",                      // password (not needed for OAuth)
                                 email,                   // email
                                 Provider.GOOGLE,         // provider
-                                providerId               // providerId
+                                providerId,               // providerId
+                                freemiumRole
                         )
                 ));
 
