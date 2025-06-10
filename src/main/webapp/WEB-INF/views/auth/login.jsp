@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login FixNow</title>
-    <link rel="shortcut icon" type="image/png" href="images/Logo.png" />
+    <link rel="shortcut icon" type="image/png" href="images/light-logo.png" />
     <link rel="stylesheet" href="css/styles.css" />
 </head>
 
@@ -50,7 +50,7 @@
                                 </div>
                                     <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <p class="fs-4 mb-0 fw-bold">New to Matdash?</p>
+                                    <p class="fs-4 mb-0 fw-bold">New to Fixnow?</p>
                                     <a class="text-primary fw-bold ms-2" href="/register">Create an account</a>
                                 </div>
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

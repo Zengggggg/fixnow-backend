@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign in to FixNow</title>
-    <link rel="shortcut icon" type="image/png" href="images/Logo.png" />
+    <link rel="shortcut icon" type="image/png" href="images/light-logo.png" />
     <link rel="stylesheet" href="css/styles.css" />
 </head>
 

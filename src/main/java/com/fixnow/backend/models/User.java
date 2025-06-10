@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -36,6 +38,9 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserText> texts;
 
 
     // You can add more fields like roles, creation date, etc.

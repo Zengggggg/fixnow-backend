@@ -12,7 +12,7 @@
     <meta name="author" content="" />
     <title>FixNow</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="images/Logo.png" />
+    <link rel="icon" type="image/x-icon" href="images/light-logo.png" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -109,7 +109,7 @@
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-collection"></i></div>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-arrow-repeat"></i></div>
                                     <h2 class="fs-4 fw-bold">Paraphraser</h2>
                                     <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
                                 </div>
@@ -118,44 +118,27 @@
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-cloud-download"></i></div>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-journal-check"></i></div>
                                     <h2 class="fs-4 fw-bold">Grammar checker</h2>
                                     <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-card-heading"></i></div>
-                                    <h2 class="fs-4 fw-bold">Plagiarism checker</h2>
-                                    <p class="mb-0">Scan your text to find any duplicate content online.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xxl-4 mb-5">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-bootstrap"></i></div>
-                                    <h2 class="fs-4 fw-bold">AI Writing Assistant</h2>
-                                    <p class="mb-0">Get help generating content and improving your writing flow.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xxl-4 mb-5">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-code"></i></div>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-file-earmark-text"></i></div>
                                     <h2 class="fs-4 fw-bold">Summarization</h2>
-                                    <p> class="mb-0">Condense long texts into concise summaries.</p>
+                                    <p class="mb-0">Condense long texts into concise summaries.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-patch-check"></i></div>
-                                    <h2 class="fs-4 fw-bold">A name you trust</h2>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-briefcase"></i></div>
+                                    <h2 class="fs-4 fw-bold">Toolkits</h2>
                                     <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since 2013!</p>
                                 </div>
                             </div>
@@ -167,6 +150,7 @@
             <footer class="py-5 bg-dark">
                 <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
             </footer>
+
         </c:when>
         <c:otherwise>
             <nav class="navbar navbar-expand-lg py-3">
@@ -256,7 +240,7 @@
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-collection"></i></div>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-arrow-repeat"></i></div>
                                     <h2 class="fs-4 fw-bold">Paraphraser</h2>
                                     <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
                                 </div>
@@ -265,44 +249,27 @@
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-cloud-download"></i></div>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-journal-check"></i></div>
                                     <h2 class="fs-4 fw-bold">Grammar checker</h2>
                                     <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-card-heading"></i></div>
-                                    <h2 class="fs-4 fw-bold">Plagiarism checker</h2>
-                                    <p class="mb-0">Scan your text to find any duplicate content online.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xxl-4 mb-5">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-bootstrap"></i></div>
-                                    <h2 class="fs-4 fw-bold">AI Writing Assistant</h2>
-                                    <p class="mb-0">Get help generating content and improving your writing flow.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xxl-4 mb-5">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-code"></i></div>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-file-earmark-text"></i></div>
                                     <h2 class="fs-4 fw-bold">Summarization</h2>
-                                    <p> class="mb-0">Condense long texts into concise summaries.</p>
+                                    <p class="mb-0">Condense long texts into concise summaries.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-xxl-4 mb-5">
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-patch-check"></i></div>
-                                    <h2 class="fs-4 fw-bold">A name you trust</h2>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-briefcase"></i></div>
+                                    <h2 class="fs-4 fw-bold">Toolkits</h2>
                                     <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since 2013!</p>
                                 </div>
                             </div>

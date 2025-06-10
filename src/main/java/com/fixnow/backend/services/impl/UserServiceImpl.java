@@ -132,7 +132,8 @@ public class UserServiceImpl implements UserService {
                                 email,                   // email
                                 Provider.GOOGLE,         // provider
                                 providerId,               // providerId
-                                freemiumRole
+                                freemiumRole,
+                                null
                         )
                 ));
 

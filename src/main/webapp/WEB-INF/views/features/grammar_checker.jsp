@@ -1,0 +1,506 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fixnow</title>
+    <link rel="icon" type="image/png" href="images/light-logo.png" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .body-wrapper-inner {
+            width: 100%;
+            height: 100vh; /* hoặc 100% nếu cha có chiều cao cố định */
+            box-sizing: border-box;
+
+            /* Thêm flex để chia 2 cột */
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Vùng chứa toolbar + editor */
+        .editor-area {
+            flex: 2; /* 2/3 chiều rộng */
+            display: flex;
+            flex-direction: column;
+            width: 600px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .highlight-spelling {
+            background-color: rgba(255, 0, 0, 0.3); /* đỏ nhạt */
+            border-bottom: 2px dashed red;
+        }
+
+        .highlight-grammar {
+            background-color: rgba(255, 255, 0, 0.3); /* vàng nhạt */
+            border-bottom: 2px dashed orange;
+        }
+
+        .suggestion {
+            cursor: pointer;
+            color: #635bff;
+            font-weight: 500;
+        }
+
+        #editor-container {
+            width: 100%;
+            height: 100%;
+            background-color: white; /* sửa bg-white thành white */
+            margin-left: 0; /* xóa margin-left 50px để không lệch */
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Toolbar container bên trái */
+        #toolbar {
+            display: flex !important;
+            justify-content: flex-start !important;
+            gap: 5px;
+            /*padding: 10px;*/
+            box-sizing: border-box;
+            flex-wrap: wrap;
+            border: none !important;
+            box-shadow: none !important;
+            flex-shrink: 0;
+            width: 800px;
+        }
+
+        #toolbar button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        #toolbar button.ql-bold,
+        #toolbar button.ql-italic,
+        #toolbar button.ql-underline,
+        #toolbar button.ql-list {
+            width: 20px;
+            height: 20px;
+            padding: 1px;
+        }
+
+        #toolbar button.ql-bold svg,
+        #toolbar button.ql-bold iconify-icon,
+        #toolbar button.ql-italic svg,
+        #toolbar button.ql-italic iconify-icon,
+        #toolbar button.ql-underline svg,
+        #toolbar button.ql-underline iconify-icon,
+        #toolbar button.ql-list svg,
+        #toolbar button.ql-list iconify-icon {
+            font-size: 26px;  /* Kích thước icon lớn hơn */
+        }
+
+        #toolbar button:hover {
+            background-color: #e0e0e0;
+            border-radius: 4px;
+        }
+
+        /* Thêm phần hộp lỗi chính tả bên phải */
+        .spellcheck-box {
+            flex: 1; /* chiếm 1/3 chiều rộng */
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            padding: 16px;
+            overflow-y: auto;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .spellcheck-box h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        #error-list {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        #error-list li {
+            margin-bottom: 5px;
+            cursor: pointer;
+            color: #d9534f; /* Màu đỏ cho lỗi */
+        }
+    </style>
+</head>
+
+<body>
+<!--  Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed" >
+
+    <!-- App Topstrip -->
+    <div class="app-topstrip bg-custom-blue py-3 px-4 w-100 d-lg-flex align-items-center justify-content-between">
+        <div class="d-none d-sm-flex align-items-center justify-content-center gap-9 mb-3 mb-lg-0" >
+            <a class="d-flex justify-content-center" href="/home">
+                <img src="images/light-logo.png" width="50">
+            </a>
+
+            <div class="position-fixed top-2 end-0 z-3 d-none d-xl-flex align-items-center gap-2 border-start border-white ps-9">
+                <!-- Templates link removed here -->
+                <a target="_blank" href="help_center.html"
+                   class="link-hover d-flex align-items-center gap-3 border-0 text-white lh-sm fs-4 me-4">
+                    <iconify-icon class="fs-6" icon="solar:question-circle-linear"></iconify-icon>
+                    Help
+                </a>
+                <a target="_blank" href="#"
+                   class="link-hover d-flex align-items-center gap-3 border-0 text-white lh-sm fs-4 me-4">
+                    <iconify-icon class="fs-6" icon="solar:case-round-linear"></iconify-icon>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div>
+            <div class="brand-logo d-flex align-items-center justify-content-between" style="border-right: #635bff;" >
+                <a href="#" class="text-nowrap logo-img">
+                    <div style="background-color: rgb(1, 1, 63); padding: 3px; border-radius: 50%; display: inline-block;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+                        </svg>
+                    </div>
+
+
+                </a>
+
+                <!-- <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                    <i class="ti ti-x fs-8"></i>
+                </div> -->
+            </div>
+
+
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                <ul id="sidebarnav">
+                    <li class="nav-small-cap d-flex align-items-center">
+                        <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4 me-2"></iconify-icon>
+                        <div class="d-flex align-items-center">
+                            <iconify-icon icon="material-symbols:home-outline" class="fs-6 me-2" style="color: #635bff;"></iconify-icon>
+                            <span class="fs-12" style="color:#635bff;">Home</span>
+                        </div>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/paraphraser">
+                            <iconify-icon icon="tabler:repeat"></iconify-icon>
+                            <span class="hide-menu">Paraphraser</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/grammar_checker">
+                            <iconify-icon icon="material-symbols:spellcheck"></iconify-icon>
+                            <span class="hide-menu">Grammar Checker</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item btn-active">
+                        <a class="sidebar-link" href="/summarizer">
+                            <iconify-icon icon="mdi:format-quote-close"></iconify-icon>
+                            <span class="hide-menu">Summarizer</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item btn-active">
+                        <a class="sidebar-link" href="/translate">
+                            <iconify-icon icon="mdi:translate"></iconify-icon>
+                            <span class="hide-menu">Translate</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
+                            <div class="d-flex align-items-center gap-3">
+                  <span class="d-flex">
+                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
+                  </span>
+                                <span class="hide-menu">Toolkits</span>
+                            </div>
+                        </a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">Email writer</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">CV generator</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">Contact Us</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">Pricing</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <span class="sidebar-divider lg"></span>
+                    </li>
+
+                </ul>
+                <div
+                        class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
+                    <h6 class="fw-semibold fs-3 mb-0 text-black lh-sm">Fixnow Premium</h6>
+                    <a href="#" class="btn btn-primary fs-2 fw-semibold lh-sm">Check</a>
+                </div>
+
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </aside>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+        <!--  Header Start -->
+        <header class="app-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="sidebar-toggler d-xl-none d-block cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-align-justified fs-8"></i>
+                    </div>
+                    <h4 class="position-absolute top-10 start-50 translate-middle m-0 fw-bold" style="position: relative; top: 30px;">Grammar Checker</h4>
+                </div>
+            </div>
+        </header>
+        <!--  Header End -->
+        <div class="body-wrapper-inner">
+            <div class="editor-area">
+                <div id="toolbar">
+                    <!-- Toolbar như bạn đã có -->
+                    <select class="ql-size" title="Font Size">
+                        <option value="small"></option>
+                        <option selected></option>
+                        <option value="large"></option>
+                        <option value="huge"></option>
+                    </select>
+                    <span class="toolbar-separator">|</span>
+
+                    <button class="ql-bold" title="Bold"></button>
+                    <button class="ql-italic" title="Italic"></button>
+                    <button class="ql-underline" title="Underline"></button>
+                    <span class="toolbar-separator">|</span>
+                    <button class="ql-list" value="bullet" title="Bullet List"></button>
+                    <button class="ql-list" value="ordered" title="Numbered List"></button>
+                    <span class="toolbar-separator">|</span>
+
+                    <button id="undo-btn" type="button" title="Undo">
+                        <iconify-icon icon="mdi:undo" style="font-size: 18px;"></iconify-icon>
+                    </button>
+                    <button id="redo-btn" type="button" title="Redo">
+                        <iconify-icon icon="mdi:redo" style="font-size: 18px;"></iconify-icon>
+                    </button>
+                    <span class="toolbar-separator">|</span>
+                    <span id="word-count" style="padding-left:5px; font-size: 16px; color: #000;"></span>
+                    <button id="check-grammar-btn" class="btn btn-primary" onclick="checkGrammar()" style="background-color: #635bff;color: white;font-size: 16px;border: none;border-radius: 6px;width: 65px;height: 30px;">
+                        Check
+                    </button>
+                </div>
+
+                <div id="editor-container">
+                    <div id="editor"></div>
+                </div>
+
+            </div>
+
+            <div class="spellcheck-box">
+                <h3 class="fs-12" style="color:#635bff;">SPELL CHECK</h3>
+                <hr>
+                <p>Click on any word below to replace it with the suggested correction.</p>
+                <ul id="error-list">
+                    <!-- Các lỗi chính tả sẽ được thêm ở đây -->
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/sidebarmenu.js"></script>
+<script src="js/app.js"></script>
+<script src="js/chart.js"></script>
+<!-- <script src="js/simplebar.js"></script> -->
+<script src="js/data.js"></script>
+<!-- solar icons -->
+<script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script>
+    // 1. Register custom formats
+    const Inline = Quill.import('blots/inline');
+
+    class SpellingErrorBlot extends Inline {}
+    SpellingErrorBlot.blotName = 'highlight-spelling';
+    SpellingErrorBlot.tagName = 'span';
+    SpellingErrorBlot.className = 'highlight-spelling';
+
+    class GrammarErrorBlot extends Inline {}
+    GrammarErrorBlot.blotName = 'highlight-grammar';
+    GrammarErrorBlot.tagName = 'span';
+    GrammarErrorBlot.className = 'highlight-grammar';
+
+    Quill.register(SpellingErrorBlot);
+    Quill.register(GrammarErrorBlot);
+
+    // 2. Khởi tạo Quill
+    const quill = new Quill('#editor-container', {
+        placeholder: 'Type your text here...',
+        modules: {
+            toolbar: '#toolbar',
+            history: {
+                delay: 1000,
+                maxStack: 100,
+                userOnly: true
+            }
+        },
+        theme: 'snow'
+    });
+
+    // 3. Undo/Redo
+    document.getElementById('undo-btn').addEventListener('click', () => {
+        quill.history.undo();
+    });
+
+    document.getElementById('redo-btn').addEventListener('click', () => {
+        quill.history.redo();
+    });
+
+    // 4. Word Count
+    const wordCountSpan = document.getElementById('word-count');
+    function updateWordCount() {
+        const text = quill.getText().trim();
+        const words = text.length > 0 ? text.split(/\s+/).length : 0;
+        wordCountSpan.textContent = `Word(s): `+words;
+        if (text.length === 0) {
+            document.getElementById('error-list').innerHTML = '';
+        }
+    }
+    quill.on('text-change', updateWordCount);
+    updateWordCount();
+
+    // 5. Kiểm tra lỗi
+    async function checkGrammar() {
+        const plainText = quill.getText();
+
+        const res = await fetch('/grammar_check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: plainText })
+        });
+
+        const data = await res.json();
+        const errors = data.errors || [];
+
+        // Xóa highlight cũ
+        quill.formatText(0, quill.getLength(), {
+            'highlight-spelling': false,
+            'highlight-grammar': false
+        });
+
+        // Highlight lỗi mới
+        errors.forEach(err => {
+            const attr = err.type === 'spelling'
+                ? { 'highlight-spelling': true }
+                : { 'highlight-grammar': true };
+
+            quill.formatText(err.start, err.end - err.start, attr);
+        });
+
+        // Cập nhật danh sách gợi ý
+        const errorList = document.getElementById('error-list');
+        errorList.innerHTML = '';
+
+        let offset = 0;
+        errors.forEach(err => {
+            const li = document.createElement('li');
+            const originalText = plainText.substring(err.start, err.end);
+            li.innerHTML = `(`+err.type+`) <span class="suggestion">`+originalText+`</span> → <strong>`+err.suggestion+`</strong>`;
+            li.style.cursor = 'pointer';
+
+            li.onclick = () => {
+                const adjustedStart = err.start + offset;
+                const adjustedEnd = err.end + offset;
+                const lengthDiff = err.suggestion.length - (adjustedEnd - adjustedStart);
+
+                // Thay thế lỗi bằng suggestion
+                quill.deleteText(adjustedStart, adjustedEnd - adjustedStart);
+                quill.insertText(adjustedStart, err.suggestion);
+
+                // Xóa highlight lỗi sau khi sửa
+                const attr = err.type === 'spelling'
+                    ? { 'highlight-spelling': false }
+                    : { 'highlight-grammar': false };
+                quill.formatText(adjustedStart, err.suggestion.length, attr);
+
+                // Cập nhật offset
+                offset += lengthDiff;
+
+                // Xóa dòng lỗi khỏi danh sách
+                li.remove();
+            };
+
+            errorList.appendChild(li);
+        });
+    }
+</script>
+
+
+</body>
+
+</html>

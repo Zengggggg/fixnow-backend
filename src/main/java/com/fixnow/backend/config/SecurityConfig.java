@@ -53,12 +53,14 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .dispatcherTypeMatchers(DispatcherType.FORWARD,
-                                DispatcherType.INCLUDE) .permitAll()
-                        .requestMatchers("/home","/doLogin","/login", "/client/**", "/css/**", "/js/**",
-                                "/images/**","/register","/doRegister").permitAll()
-                        .anyRequest().authenticated())
+//                        .dispatcherTypeMatchers(DispatcherType.FORWARD,
+//                                DispatcherType.INCLUDE) .permitAll()
+//                        .requestMatchers("/home","/doLogin","/login", "/client/**", "/css/**", "/js/**",
+//                                "/images/**","/register","/doRegister").permitAll()
+                        .anyRequest().permitAll())
+                .csrf(csrf -> csrf.disable())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .usernameParameter("email")  // 👈 tell Spring to use "email" instead of "username"

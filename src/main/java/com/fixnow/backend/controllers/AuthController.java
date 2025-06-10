@@ -66,7 +66,7 @@ public class AuthController {
                 // Store user in session, then redirect to home
                 session.setAttribute("user", user);
                 log.info("User {} logged in successfully", user.getUsername());
-                return "redirect:/home";
+                return "redirect:/paraphraser";
             } else {
                 model.addAttribute("error", "Invalid email or password. Please try again.");
                 return "auth/login";
