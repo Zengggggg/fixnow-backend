@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.war backend.war
 
 # Expose the port (change if your Spring Boot runs on a different port)
-EXPOSE 8081
+EXPOSE 8080
 
 # Start the app
 ENTRYPOINT ["java", "-jar", "backend.war"]
