@@ -1,23 +1,22 @@
-# ---- Build stage ----
-FROM maven:3-openjdk-17 AS build
+# ---- Build Stage ----
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
 # Copy source code
 COPY . .
 
-# Build the application without tests
-RUN mvn clean package -DskipTests && rm -rf /root/.m2/repository
+# Build the application without running tests
+RUN mvn clean package -DskipTests
 
-# ---- Runtime stage ----
-FROM openjdk:17-jdk-slim
-WORKDIR /app
+# ---- Runtime Stage (Tomcat) ----
+FROM tomcat:9.0-jdk17-temurin
 
-# Copy WAR file from build stage
-COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.war backend.war
+# Xóa các ứng dụng mặc định trong Tomcat (tùy chọn)
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Expose the port (change if your Spring Boot runs on a different port)
+# Copy WAR file từ stage build vào thư mục deploy của Tomcat
+COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+
+# Expose port 8080 (Render yêu cầu app chạy trên cổng này)
 EXPOSE 8080
-
-# Start the app
-ENTRYPOINT ["java", "-jar", "backend.war"]
