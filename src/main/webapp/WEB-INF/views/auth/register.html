@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fixnow - Register</title>
+    <link rel="icon" type="image/png" th:href="@{/images/light-logo.png}" />
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+    <style>
+        .register-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .btn-register {
+            width: 100%;
+            padding: 10px;
+            background: #635bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-register:hover {
+            background: #4a43e0;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2 class="text-center mb-4">Create an Account</h2>
+        
+        <!-- Error message -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        
+        <!-- Success message -->
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+        <form th:action="@{/doRegister}" method="post" th:object="${user}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" th:field="*{username}" required>
+                <div th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" th:field="*{password}" required>
+                <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
+                <div th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger" th:errors="*{confirmPassword}"></div>
+            </div>
+
+            <button type="submit" class="btn-register">Register</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a th:href="@{/login}">Login here</a>
+        </div>
+    </div>
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html> 

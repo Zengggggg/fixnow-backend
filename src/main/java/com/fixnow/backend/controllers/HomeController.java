@@ -11,6 +11,6 @@ public class HomeController {
     @GetMapping
     public String showHomePage() {
         System.out.println(">>> Accessing home page ");
-        return "home/home"; // This will resolve to /WEB-INF/views/home.jsp
+        return "home/home"; // This will resolve to /WEB-INF/views/home/home.html
     }
 }

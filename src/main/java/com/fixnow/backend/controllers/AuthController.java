@@ -55,7 +55,7 @@ public class AuthController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("loginRequest", new LoginRequestDto());
-        return "auth/login"; // maps to /WEB-INF/views/auth/login.jsp
+        return "auth/login"; // maps to /WEB-INF/views/auth/login.html
     }
 
     @PostMapping("/doLogin")
