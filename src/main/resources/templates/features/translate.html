@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fixnow</title>
+    <link rel="icon" type="image/png" th:href="@{/images/light-logo.png}" />
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+    <style>
+        textarea::placeholder {
+            font-size: 1rem; /* Adjust size as needed */
+            color: #999;       /* Light gray color */
+        }
+    </style>
+</head>
+
+<body>
+<!--  Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed" >
+
+    <!-- App Topstrip -->
+    <div class="app-topstrip bg-custom-blue py-3 px-4 w-100 d-lg-flex align-items-center justify-content-between">
+        <div class="d-none d-sm-flex align-items-center justify-content-center gap-9 mb-3 mb-lg-0" >
+            <a class="d-flex justify-content-center" th:href="@{/home}">
+                <img th:src="@{/images/light-logo.png}" width="50">
+            </a>
+
+            <div class="position-fixed top-2 end-0 z-3 d-none d-xl-flex align-items-center gap-2 border-start border-white ps-9">
+                <!-- Templates link removed here -->
+                <a target="_blank" href="#"
+                   class="link-hover d-flex align-items-center gap-3 border-0 text-white lh-sm fs-4 me-4">
+                    <iconify-icon class="fs-6" icon="solar:question-circle-linear"></iconify-icon>
+                    Help
+                </a>
+                <a target="_blank" href="#"
+                   class="link-hover d-flex align-items-center gap-3 border-0 text-white lh-sm fs-4 me-4">
+                    <iconify-icon class="fs-6" icon="solar:case-round-linear"></iconify-icon>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div>
+            <div class="brand-logo d-flex align-items-center justify-content-between" style="border-right: #635bff;" >
+                <a href="#" class="text-nowrap logo-img">
+                    <div style="background-color: rgb(1, 1, 63); padding: 3px; border-radius: 50%; display: inline-block;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                <ul id="sidebarnav">
+                    <li class="nav-small-cap d-flex align-items-center">
+                        <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4 me-2"></iconify-icon>
+                        <div class="d-flex align-items-center">
+                            <iconify-icon icon="material-symbols:home-outline" class="fs-6 me-2" style="color: #635bff;"></iconify-icon>
+                            <span class="fs-12" style="color:#635bff;">Home</span>
+                        </div>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" th:href="@{/paraphraser}">
+                            <iconify-icon icon="tabler:repeat"></iconify-icon>
+                            <span class="hide-menu">Paraphraser</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" th:href="@{/grammar_checker}">
+                            <iconify-icon icon="material-symbols:spellcheck"></iconify-icon>
+                            <span class="hide-menu">Grammar Checker</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item btn-active">
+                        <a class="sidebar-link" th:href="@{/summarizer}">
+                            <iconify-icon icon="mdi:format-quote-close"></iconify-icon>
+                            <span class="hide-menu">Summarizer</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item btn-active">
+                        <a class="sidebar-link" th:href="@{/translate}">
+                            <iconify-icon icon="mdi:translate"></iconify-icon>
+                            <span class="hide-menu">Translate</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="d-flex">
+                                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
+                                </span>
+                                <span class="hide-menu">Toolkits</span>
+                            </div>
+                        </a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="d-flex">
+                                            <span class="icon-small"></span>
+                                        </span>
+                                        <span class="hide-menu">Email writer</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="d-flex">
+                                            <span class="icon-small"></span>
+                                        </span>
+                                        <span class="hide-menu">CV generator</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="d-flex">
+                                            <span class="icon-small"></span>
+                                        </span>
+                                        <span class="hide-menu">Contact Us</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="d-flex">
+                                            <span class="icon-small"></span>
+                                        </span>
+                                        <span class="hide-menu">Pricing</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <span class="sidebar-divider lg"></span>
+                    </li>
+
+                </ul>
+                <div class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
+                    <h6 class="fw-semibold fs-3 mb-0 text-black lh-sm">Fixnow Premium</h6>
+                    <a href="#" class="btn btn-primary fs-2 fw-semibold lh-sm">Check</a>
+                </div>
+
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </aside>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+        <!--  Header Start -->
+        <header class="app-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="sidebar-toggler d-xl-none d-block cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-align-justified fs-8"></i>
+                    </div>
+                    <h4 class="position-absolute top-10 start-50 translate-middle m-0 fw-bold" style="position: relative; top: 30px;">Translate</h4>
+                </div>
+            </div>
+        </header>
+        <!--  Header End -->
+        <div class="body-wrapper-inner">
+            <div class="translate-top">
+                <button id="detect-btn">
+                    <span class="iconify" data-icon="mdi:earth" data-inline="false"></span>
+                    Detect language
+                </button>
+                <button id="switch-btn" class="switch-button d-flex align-items-center justify-content-center">
+                    <span class="iconify" data-icon="mdi:swap-horizontal" data-inline="false" ></span>
+                </button>
+                <label for="target-lang-select" style="display: flex; align-items: center; gap: 6px;">
+                    <span class="iconify" data-icon="mdi:translate" data-inline="false"></span>
+                    <select id="target-lang-select" class="dropdown-button">
+                        <option value="en">English</option>
+                        <option value="vi" selected>Vietnamese</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="ja">Japanese</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="translate-content">
+                <div class="translate-box">
+                    <textarea placeholder="Enter text here..." class="input-area"></textarea>
+                </div>
+                <div class="translate-box">
+                    <textarea placeholder="Translation will appear here..." class="output-area" readonly></textarea>
+                </div>
+            </div>
+
+            <div class="translate-action">
+                <button onclick="translateText()">
+                    <span class="iconify" data-icon="mdi:arrow-right" style="font-size: 24px; vertical-align: middle; margin-right: 8px;"></span>
+                    Translate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/sidebarmenu.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/chart.js}"></script>
+<script th:src="@{/js/data.js}"></script>
+<!-- solar icons -->
+<script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+
+<script>
+    function translateText() {
+        const inputText = document.querySelector('.input-area').value.trim();
+        const targetLang = document.getElementById('target-lang-select').value;
+        const outputArea = document.querySelector('.output-area');
+
+        if (!inputText) {
+            alert('Please enter some text to translate.');
+            return;
+        }
+
+        // Show loading state
+        outputArea.value = 'Translating...';
+
+        // Make API call to backend
+        fetch('/api/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                text: inputText,
+                targetLang: targetLang
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            outputArea.value = data.translatedText;
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+            outputArea.value = '';
+        });
+    }
+
+    // Add event listener for language detection
+    document.getElementById('detect-btn').addEventListener('click', function() {
+        const inputText = document.querySelector('.input-area').value.trim();
+        if (!inputText) {
+            alert('Please enter some text to detect language.');
+            return;
+        }
+
+        fetch('/api/detect-language', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: inputText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            alert('Detected language: ' + data.language);
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+    });
+
+    // Add event listener for language switch
+    document.getElementById('switch-btn').addEventListener('click', function() {
+        const inputText = document.querySelector('.input-area').value;
+        const outputText = document.querySelector('.output-area').value;
+        const targetLang = document.getElementById('target-lang-select').value;
+
+        if (outputText && outputText !== 'Translating...') {
+            document.querySelector('.input-area').value = outputText;
+            document.querySelector('.output-area').value = inputText;
+        }
+    });
+</script>
+</body>
+</html> 
