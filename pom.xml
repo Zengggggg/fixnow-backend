@@ -148,7 +148,7 @@
 		</dependency>
 
 	</dependencies>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
