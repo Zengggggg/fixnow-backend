@@ -37,13 +37,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto registerUser(UserRegistrationDto registrationDto) {
         // Check if username or email already exists
-        if (userRepository.existsByUsername(registrationDto.getUsername())) {
-            throw new IllegalArgumentException("Username already exists");
+        if (!registrationDto.getPassword().equals(registrationDto.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match.");
         }
         if (userRepository.existsByEmail(registrationDto.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        Role freemiumRole = roleRepository.findByName("FREEMIUM_USER");
+        Role freemiumRole = roleRepository.findByName("ROLE_FREE")
+                .orElseThrow(() -> new IllegalStateException("Default role ROLE_FREE not found"));;
         User newUser = new User();
         newUser.setUsername(registrationDto.getUsername());
         newUser.setEmail(registrationDto.getEmail());
@@ -117,7 +118,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public String loginWithGoogle(String idToken) throws GeneralSecurityException, IOException {
         GoogleIdToken.Payload payload = verifyToken(idToken);
-        Role freemiumRole = roleRepository.findByName("FREEMIUM_USER");
+        Role freemiumRole = roleRepository.findByName("FREEMIUM_USER")
+                .orElseThrow(() -> new IllegalStateException("Default role ROLE_FREE not found"));;
         assert payload != null;
         String email = payload.getEmail();
         String name = (String) payload.get("name");

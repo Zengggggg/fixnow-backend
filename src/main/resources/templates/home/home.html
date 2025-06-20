@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -14,12 +16,12 @@
     <link th:href="@{/css/home.css}" rel="stylesheet" />
 </head>
 <body>
-    <div th:if="${session.user != null}">
+    <div sec:authorize="isAuthenticated()">
         <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
                 <a class="navbar-brand me-4" href="#">
                     <img th:src="@{/images/Logo.png}" />
-                    <b>Fixnow</b>
+<!--                    <b>Fixnow</b>-->
                 </a>
 
                 <!-- Left-aligned dropdowns -->
@@ -97,43 +99,59 @@
         <!-- Page Content-->
         <section class="pt-4">
             <div class="container px-lg-5">
-                <!-- Page Features-->
+                <!-- Page Features -->
                 <div class="row gx-lg-5">
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-arrow-repeat"></i></div>
-                                <h2 class="fs-4 fw-bold">Paraphraser</h2>
-                                <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/paraphraser" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Paraphraser</h2>
+                                    <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-journal-check"></i></div>
-                                <h2 class="fs-4 fw-bold">Grammar checker</h2>
-                                <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/grammar_checker" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100 ">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Grammar checker</h2>
+                                    <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-file-earmark-text"></i></div>
-                                <h2 class="fs-4 fw-bold">Summarization</h2>
-                                <p class="mb-0">Condense long texts into concise summaries.</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/summarizer" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Summarization</h2>
+                                    <p class="mb-0">Condense long texts into concise summaries.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-briefcase"></i></div>
-                                <h2 class="fs-4 fw-bold">Toolkits</h2>
-                                <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since 2013!</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/under_development_process" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Toolkits</h2>
+                                    <p class="mb-0">Use toolkits to make everyday tasks faster, easier, and more effective.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -144,12 +162,12 @@
         </footer>
     </div>
 
-    <div th:unless="${session.user != null}">
+    <div sec:authorize="isAnonymous()">
         <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
                 <a class="navbar-brand me-4" href="#">
                     <img th:src="@{/images/Logo.png}" />
-                    <b>Fixnow</b>
+<!--                    <b>Fixnow</b>-->
                 </a>
 
                 <!-- Left-aligned dropdowns -->
@@ -226,43 +244,59 @@
         <!-- Page Content-->
         <section class="pt-4">
             <div class="container px-lg-5">
-                <!-- Page Features-->
+                <!-- Page Features -->
                 <div class="row gx-lg-5">
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-arrow-repeat"></i></div>
-                                <h2 class="fs-4 fw-bold">Paraphraser</h2>
-                                <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/login" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Paraphraser</h2>
+                                    <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-journal-check"></i></div>
-                                <h2 class="fs-4 fw-bold">Grammar checker</h2>
-                                <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/login" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100 ">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Grammar checker</h2>
+                                    <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-file-earmark-text"></i></div>
-                                <h2 class="fs-4 fw-bold">Summarization</h2>
-                                <p class="mb-0">Condense long texts into concise summaries.</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/login" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Summarization</h2>
+                                    <p class="mb-0">Condense long texts into concise summaries.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-briefcase"></i></div>
-                                <h2 class="fs-4 fw-bold">Toolkits</h2>
-                                <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since 2013!</p>
+                    <div class="col-md-6 mb-5 d-flex justify-content-center">
+                        <a href="/login" class="text-decoration-none text-dark w-75">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <h2 class="fs-4 fw-bold">Toolkits</h2>
+                                    <p class="mb-0">Use toolkits to make everyday tasks faster, easier, and more effective.</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>

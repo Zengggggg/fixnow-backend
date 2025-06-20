@@ -58,25 +58,6 @@ public class AuthController {
         return "auth/login"; // maps to /WEB-INF/views/auth/login.html
     }
 
-    @PostMapping("/doLogin")
-    public String loginUser(@ModelAttribute LoginRequestDto loginRequestDto, Model model, HttpSession session) {
-        try {
-            User user = userService.findByEmail(loginRequestDto.getEmail());
-            if (passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-                // Store user in session, then redirect to home
-                session.setAttribute("user", user);
-                log.info("User {} logged in successfully", user.getUsername());
-                return "redirect:/paraphraser";
-            } else {
-                model.addAttribute("error", "Invalid email or password. Please try again.");
-                return "auth/login";
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", "Login error occurred");
-            return "auth/login";
-        }
-    }
-
     @GetMapping("/update")
     public String showUpdateForm(Model model, @RequestParam("id") Long id) {
         User user = userService.findById(id); // Assumes a method to fetch user

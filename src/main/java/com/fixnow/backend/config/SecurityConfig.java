@@ -1,8 +1,10 @@
 package com.fixnow.backend.config;
 
+import com.fixnow.backend.repositories.UserRepository;
 import com.fixnow.backend.services.CustomUserDetailsService;
 import com.fixnow.backend.services.UserService;
 import jakarta.servlet.DispatcherType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,10 +26,9 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Bean
-    public UserDetailsService userDetailsService(UserService userService) {
-        return new CustomUserDetailsService(userService);
-    }
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
                                                        PasswordEncoder passwordEncoder,
@@ -54,19 +55,37 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/**")
-                .authorizeHttpRequests(authorize -> authorize
-//                        .dispatcherTypeMatchers(DispatcherType.FORWARD,
-//                                DispatcherType.INCLUDE) .permitAll()
-//                        .requestMatchers("/home","/doLogin","/login", "/client/**", "/css/**", "/js/**",
-//                                "/images/**","/register","/doRegister").permitAll()
-                        .anyRequest().permitAll())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/login", "/doLogin", "/register", "/doRegister",
+                                "/css/**", "/js/**", "/images/**", "/client/**","/"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",
+                                "/summarizer","/summarize","/translate","/translation"
+                        ).hasRole("FREE")// Các trang không cần đăng nhập
+                        .anyRequest().authenticated() // Các trang khác yêu cầu đăng nhập
+                )
                 .csrf(csrf -> csrf.disable())
-                .formLogin(formLogin -> formLogin
+                .formLogin(form -> form
                         .loginPage("/login")
-                        .usernameParameter("email")  // 👈 tell Spring to use "email" instead of "username"
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("email")  // Dùng "email" thay vì "username"
                         .passwordParameter("password")
+                        .defaultSuccessUrl("/paraphraser", true) // Sau khi login thành công thì vào /
                         .failureUrl("/login?error")
-                        .permitAll());
+                        .permitAll()
+                )
+                .rememberMe(remember -> remember
+                        .key("secure-remember-key") // Chuỗi bất kỳ, nên ngẫu nhiên
+                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 ngày
+                        .userDetailsService(userDetailsService) // bạn cần có bean này
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                );
         return http.build();
     }
 } 

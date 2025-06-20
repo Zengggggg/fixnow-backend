@@ -1,30 +1,38 @@
 package com.fixnow.backend.services;
 
+import com.fixnow.backend.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
-    public CustomUserDetailsService(UserService userService) {
-        this.userService = userService;
+
+    private final UserRepository userRepository;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        com.fixnow.backend.models.User user = userService.findByEmail(username);
-        if(user == null){
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        return new User(
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        com.fixnow.backend.models.User user = userRepository.findByEmailWithRole(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        // Lấy tên vai trò, ví dụ: ROLE_FREE
+        String roleName = user.getRole().getName();
+
+        return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                Collections.singletonList(
-                        new SimpleGrantedAuthority(user.getRole().getName()))
+                Collections.singletonList(new SimpleGrantedAuthority(roleName))
         );
     }
 }

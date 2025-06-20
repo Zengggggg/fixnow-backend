@@ -24,4 +24,9 @@ public class FeaturesController {
     public String translatePage() {
         return "features/translate"; // maps to /WEB-INF/views/features/translate.html
     }
+
+    @GetMapping("/under_development_process")
+    public String underDevelopmentProcessPage() {
+        return "features/under_development_process";
+    }
 }
