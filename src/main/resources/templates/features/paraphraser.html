@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fixnow</title>
-    <link rel="icon" type="image/png" th:href="@{/images/light-logo.png}" />
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+    <link rel="icon" type="image/png" th:href="@{images/light-logo.png}" />
+    <link rel="stylesheet" th:href="@{css/dashboard.css}" />
     <style>
         textarea::placeholder {
             font-size: 0.8rem; /* Adjust size as needed */
@@ -23,7 +24,7 @@
     <div class="app-topstrip bg-custom-blue py-3 px-4 w-100 d-lg-flex align-items-center justify-content-between">
         <div class="d-none d-sm-flex align-items-center justify-content-center gap-9 mb-3 mb-lg-0" >
             <a class="d-flex justify-content-center" href="/">
-                <img th:src="@{/images/light-logo.png}" width="50">
+                <img th:src="@{images/light-logo.png}" width="50">
             </a>
 
             <div class="position-fixed top-2 end-0 z-3 d-none d-xl-flex align-items-center gap-2 border-start border-white ps-9">
@@ -53,8 +54,15 @@
                             <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
                         </svg>
                     </div>
+
+
                 </a>
+
+                <!-- <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                    <i class="ti ti-x fs-8"></i>
+                </div> -->
             </div>
+
 
             <!-- Sidebar navigation-->
             <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
@@ -95,49 +103,53 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
                             <div class="d-flex align-items-center gap-3">
-                                <span class="d-flex">
-                                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
-                                </span>
+                  <span class="d-flex">
+                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
+                  </span>
                                 <span class="hide-menu">Toolkits</span>
                             </div>
                         </a>
                         <ul aria-expanded="false" class="collapse first-level">
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                <a class="sidebar-link justify-content-between"
+                                   href="/under_development_process">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Email writer</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                <a class="sidebar-link justify-content-between"
+                                   href="/under_development_process">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">CV generator</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="#">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Contact Us</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="#">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Pricing</span>
                                     </div>
                                 </a>
@@ -150,7 +162,8 @@
                     </li>
 
                 </ul>
-                <div class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
+                <div
+                        class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
                     <h6 class="fw-semibold fs-3 mb-0 text-black lh-sm">Fixnow Premium</h6>
                     <a href="#" class="btn btn-primary fs-2 fw-semibold lh-sm">Check</a>
                 </div>
@@ -215,10 +228,7 @@
         </div>
     </div>
 </div>
-<script th:src="@{/js/jquery.min.js}"></script>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/sidebarmenu.js}"></script>
-<script th:src="@{/js/app.js}"></script>
+
 <!-- solar icons -->
 <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -230,87 +240,80 @@
 
         if (wordCount > 125) {
             Swal.fire({
-                title: 'Word Limit Exceeded',
-                text: 'Please enter text with 125 words or less.',
                 icon: 'warning',
-                confirmButtonText: 'OK'
+                title: 'Reached word limit!',
+                text: 'Vui lòng nâng cấp tài khoản Premium để sử dụng hơn 125 từ.',
+                confirmButtonText: 'Nâng cấp ngay',
+                confirmButtonColor: '#d33'
             });
             return;
         }
 
-        if (inputText === '') {
-            Swal.fire({
-                title: 'Empty Input',
-                text: 'Please enter some text to paraphrase.',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        // Show loading state
-        const outputTextarea = document.getElementById('outputText');
-        outputTextarea.value = 'Paraphrasing...';
-
-        // Make API call to backend
-        fetch('/api/paraphrase', {
+        // Gửi request nếu chưa vượt giới hạn
+        fetch('/paraphrase', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                text: inputText,
-                language: document.getElementById('languageSelector').value
+            body: JSON.stringify({ text: inputText })
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('outputText').value = data.paraphrasedText;
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            outputTextarea.value = data.paraphrasedText;
-        })
-        .catch(error => {
-            Swal.fire({
-                title: 'Error',
-                text: error.message || 'An error occurred while paraphrasing.',
-                icon: 'error',
-                confirmButtonText: 'OK'
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Paraphrasing failed.');
             });
-            outputTextarea.value = '';
-        });
     }
+</script>
+<script>
+    const inputTextArea = document.getElementById('inputText');
+    const wordCountBadge = document.getElementById('wordCountBadge');
+    const pasteBtn = document.getElementById('pasteBtn');
 
-    function pasteText() {
-        navigator.clipboard.readText()
-            .then(text => {
-                document.getElementById('inputText').value = text;
-                updateWordCount();
-            })
-            .catch(err => {
-                console.error('Failed to read clipboard contents: ', err);
-            });
-    }
+    inputTextArea.addEventListener('input', updateWordCount);
 
     function updateWordCount() {
-        const inputText = document.getElementById('inputText').value;
-        const wordCount = inputText.split(/\s+/).filter(w => w.length > 0).length;
-        const wordCountBadge = document.getElementById('wordCountBadge');
-        
-        wordCountBadge.textContent = `${wordCount} / 125 words`;
-        wordCountBadge.style.display = 'inline-block';
-        
-        if (wordCount > 125) {
-            wordCountBadge.classList.add('btn-danger');
+        const text = inputTextArea.value.trim();
+        const words = text.split(/\s+/).filter(w => w.length > 0);
+        const count = words.length;
+
+        // Toggle visibility based on input
+        if (text.length > 0) {
+            pasteBtn.style.display = 'none';
+            wordCountBadge.style.display = 'inline-block';
+        } else {
+            pasteBtn.style.display = 'inline-block';
+            wordCountBadge.style.display = 'none';
+            document.getElementById('outputText').value = '';
+        }
+
+        // Update word count text
+        wordCountBadge.textContent = count+` / 125 words`;
+
+        // Change badge color if over limit
+        if (count > 125) {
             wordCountBadge.classList.remove('btn-outline-secondary');
+            wordCountBadge.classList.add('btn-danger');
         } else {
             wordCountBadge.classList.remove('btn-danger');
             wordCountBadge.classList.add('btn-outline-secondary');
         }
     }
 
-    // Add event listener for input text changes
-    document.getElementById('inputText').addEventListener('input', updateWordCount);
+    function pasteText() {
+        navigator.clipboard.readText()
+            .then(text => {
+                inputTextArea.value = text;
+                updateWordCount(); // trigger update immediately
+            })
+            .catch(err => {
+                alert('Could not paste text: ' + err);
+            });
+    }
 </script>
+
 </body>
-</html> 
+
+</html>

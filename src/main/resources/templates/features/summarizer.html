@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fixnow</title>
-    <link rel="icon" type="image/png" th:href="@{/images/light-logo.png}" />
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+    <link rel="icon" type="image/png" th:href="@{images/light-logo.png}" />
+    <link rel="stylesheet" th:href="@{css/dashboard.css}" />
     <style>
         textarea::placeholder {
             font-size: 0.8rem; /* Adjust size as needed */
@@ -22,8 +23,8 @@
     <!-- App Topstrip -->
     <div class="app-topstrip bg-custom-blue py-3 px-4 w-100 d-lg-flex align-items-center justify-content-between">
         <div class="d-none d-sm-flex align-items-center justify-content-center gap-9 mb-3 mb-lg-0" >
-            <a class="d-flex justify-content-center" th:href="@{/}">
-                <img th:src="@{/images/light-logo.png}" width="50">
+            <a class="d-flex justify-content-center" href="/">
+                <img th:src="@{images/light-logo.png}" width="50">
             </a>
 
             <div class="position-fixed top-2 end-0 z-3 d-none d-xl-flex align-items-center gap-2 border-start border-white ps-9">
@@ -53,8 +54,15 @@
                             <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
                         </svg>
                     </div>
+
+
                 </a>
+
+                <!-- <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                    <i class="ti ti-x fs-8"></i>
+                </div> -->
             </div>
+
 
             <!-- Sidebar navigation-->
             <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
@@ -95,49 +103,53 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
                             <div class="d-flex align-items-center gap-3">
-                                <span class="d-flex">
-                                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
-                                </span>
+                  <span class="d-flex">
+                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
+                  </span>
                                 <span class="hide-menu">Toolkits</span>
                             </div>
                         </a>
                         <ul aria-expanded="false" class="collapse first-level">
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                <a class="sidebar-link justify-content-between"
+                                   href="/under_development_process">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                                      <span class="d-flex">
+                                        <span class="icon-small"></span>
+                                      </span>
                                         <span class="hide-menu">Email writer</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                <a class="sidebar-link justify-content-between"
+                                   href="/under_development_process">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">CV generator</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="#">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Contact Us</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="#">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Pricing</span>
                                     </div>
                                 </a>
@@ -150,7 +162,8 @@
                     </li>
 
                 </ul>
-                <div class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
+                <div
+                        class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
                     <h6 class="fw-semibold fs-3 mb-0 text-black lh-sm">Fixnow Premium</h6>
                     <a href="#" class="btn btn-primary fs-2 fw-semibold lh-sm">Check</a>
                 </div>
@@ -217,12 +230,6 @@
         </div>
     </div>
 </div>
-<script th:src="@{/js/jquery.min.js}"></script>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/sidebarmenu.js}"></script>
-<script th:src="@{/js/app.js}"></script>
-<script th:src="@{/js/chart.js}"></script>
-<script th:src="@{/js/data.js}"></script>
 <!-- solar icons -->
 <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 <script>
@@ -230,74 +237,113 @@
         tab.addEventListener('click', function () {
             document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
+
+            // Nếu cần lấy ngôn ngữ: this.dataset.lang
+            const selectedLang = this.dataset.lang;
+            console.log("Selected language:", selectedLang);
+            // => Bạn có thể dùng selectedLang để gửi API hoặc xử lý logic sau này
         });
     });
-
+</script>
+<script>
     function updateSliderStyle(slider) {
-        const value = slider.value;
-        const percentage = ((value - slider.min) / (slider.max - slider.min)) * 100;
-        slider.style.background = `linear-gradient(to right, #635bff 0%, #635bff ${percentage}%, #e9ecef ${percentage}%, #e9ecef 100%)`;
+        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.background = `linear-gradient(to right, #635bff 0%, #635bff `+value+`, #e0deff `+value+`, #e0deff 100%)`;
     }
 
     function updateLengthLabel(value) {
-        const label = document.getElementById('lengthLabel');
-        switch(value) {
-            case '1':
-                label.textContent = 'Short';
-                break;
-            case '2':
-                label.textContent = 'Medium';
-                break;
-            case '3':
-                label.textContent = 'Long';
-                break;
-            case '4':
-                label.textContent = 'Very Long';
-                break;
-        }
+        const labelMap = {
+            1: "Short",
+            2: "Medium",
+            3: "Long",
+            4: "Very Long"
+        };
+        document.getElementById("lengthLabel").innerText = labelMap[value];
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const slider = document.getElementById('lengthSlider');
+        updateSliderStyle(slider); // cần thiết!
+        updateLengthLabel(slider.value);
+        slider.addEventListener('input', function () {
+            updateSliderStyle(slider);
+            updateLengthLabel(slider.value);
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sliderSection = document.getElementById('slider-section');
+        const methodTabs = document.querySelectorAll('.method-tab');
+
+        methodTabs.forEach(button => {
+            button.addEventListener('click', function () {
+                const lang = button.getAttribute('data-lang');
+
+                if (lang === 'en') {
+                    // Show slider in "Paragraph" mode
+                    sliderSection.style.display = 'block';
+                } else {
+                    // Hide slider in other modes like "Bullet points"
+                    sliderSection.style.display = 'none';
+                }
+
+                // Optional: Toggle active class
+                methodTabs.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+    });
+    function getSelectedFormat() {
+        const activeTab = document.querySelector('.method-tab.active');
+        return activeTab ? (activeTab.dataset.lang === 'fr' ? 'bullet' : 'normal') : 'normal';
+    }
+    // Xử lý khi nhấn nút Summarize
     function summarizeText() {
         const inputText = document.getElementById('inputText').value.trim();
-        const outputTextarea = document.getElementById('outputText');
-        const selectedMethod = document.querySelector('.method-tab.active').dataset.lang;
-        const length = document.getElementById('lengthSlider').value;
+        const lengthValue = document.getElementById('lengthSlider').value;
+        const format = getSelectedFormat(); // 'normal' hoặc 'bullet'
 
-        if (!inputText) {
-            alert('Please enter some text to summarize.');
+        if (inputText.length === 0) {
+            alert("Please enter some text to summarize.");
             return;
         }
 
-        // Show loading state
-        outputTextarea.value = 'Summarizing...';
-
-        // Make API call to backend
-        fetch('/api/summarize', {
+        fetch('/summarize', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 text: inputText,
-                method: selectedMethod,
-                length: length
+                length: parseInt(lengthValue),
+                format: format
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            outputTextarea.value = data.summary;
-        })
-        .catch(error => {
-            alert('Error: ' + error.message);
-            outputTextarea.value = '';
-        });
+            .then(res => res.json())
+            .then(data => {
+                // console.log("DATA RECEIVED FROM SERVER:", data);
+                document.getElementById('outputText').value = data.summarizedText;
+            })
+            .catch(err => {
+                console.error('Summarization error:', err);
+                alert("Summarization failed.");
+            });
     }
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputBox = document.getElementById('inputText');
+        const outputBox = document.getElementById('outputText');
 
-    // Initialize slider style
-    updateSliderStyle(document.getElementById('lengthSlider'));
+        inputBox.addEventListener('input', function () {
+            if (inputBox.value.trim() === '') {
+                outputBox.value = '';
+            }
+        });
+    });
 </script>
+
+
+
 </body>
-</html> 
+
+</html>

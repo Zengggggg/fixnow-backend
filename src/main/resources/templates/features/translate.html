@@ -1,13 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fixnow</title>
-    <link rel="icon" type="image/png" th:href="@{/images/light-logo.png}" />
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-
+    <link rel="icon" type="image/png" th:href="@{images/light-logo.png}" />
+    <link rel="stylesheet" th:href="@{css/dashboard.css}" />
     <style>
         textarea::placeholder {
             font-size: 1rem; /* Adjust size as needed */
@@ -24,8 +23,8 @@
     <!-- App Topstrip -->
     <div class="app-topstrip bg-custom-blue py-3 px-4 w-100 d-lg-flex align-items-center justify-content-between">
         <div class="d-none d-sm-flex align-items-center justify-content-center gap-9 mb-3 mb-lg-0" >
-            <a class="d-flex justify-content-center" th:href="@{/}">
-                <img th:src="@{/images/light-logo.png}" width="50">
+            <a class="d-flex justify-content-center" href="/">
+                <img th:src="@{images/light-logo.png}" width="50">
             </a>
 
             <div class="position-fixed top-2 end-0 z-3 d-none d-xl-flex align-items-center gap-2 border-start border-white ps-9">
@@ -55,8 +54,15 @@
                             <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
                         </svg>
                     </div>
+
+
                 </a>
+
+                <!-- <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                    <i class="ti ti-x fs-8"></i>
+                </div> -->
             </div>
+
 
             <!-- Sidebar navigation-->
             <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
@@ -97,49 +103,53 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
                             <div class="d-flex align-items-center gap-3">
-                                <span class="d-flex">
-                                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
-                                </span>
+                  <span class="d-flex">
+                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
+                  </span>
                                 <span class="hide-menu">Toolkits</span>
                             </div>
                         </a>
                         <ul aria-expanded="false" class="collapse first-level">
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                <a class="sidebar-link justify-content-between"
+                                   href="/under_development_process">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Email writer</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                <a class="sidebar-link justify-content-between"
+                                   href="/under_development_process">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">CV generator</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="#">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Contact Us</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link justify-content-between" href="#">
+                                <a class="sidebar-link justify-content-between"
+                                   href="#">
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="d-flex">
-                                            <span class="icon-small"></span>
-                                        </span>
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
                                         <span class="hide-menu">Pricing</span>
                                     </div>
                                 </a>
@@ -152,7 +162,8 @@
                     </li>
 
                 </ul>
-                <div class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
+                <div
+                        class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
                     <h6 class="fw-semibold fs-3 mb-0 text-black lh-sm">Fixnow Premium</h6>
                     <a href="#" class="btn btn-primary fs-2 fw-semibold lh-sm">Check</a>
                 </div>
@@ -178,6 +189,7 @@
         </header>
         <!--  Header End -->
         <div class="body-wrapper-inner">
+            <!-- <div class="translate-container"> -->
             <div class="translate-top">
                 <button id="detect-btn">
                     <span class="iconify" data-icon="mdi:earth" data-inline="false"></span>
@@ -196,6 +208,7 @@
                         <option value="ja">Japanese</option>
                     </select>
                 </label>
+
             </div>
 
             <div class="translate-content">
@@ -203,104 +216,67 @@
                     <textarea placeholder="Enter text here..." class="input-area"></textarea>
                 </div>
                 <div class="translate-box">
-                    <textarea placeholder="Translation will appear here..." class="output-area" readonly></textarea>
+              <textarea
+                      placeholder="Translation will appear here..."
+                      class="output-area"
+                      readonly
+              ></textarea>
                 </div>
+
             </div>
 
             <div class="translate-action">
-                <button onclick="translateText()">
+                <button>
                     <span class="iconify" data-icon="mdi:arrow-right" style="font-size: 24px; vertical-align: middle; margin-right: 8px;"></span>
                     Translate
                 </button>
             </div>
+
+            <!-- </div> -->
         </div>
     </div>
 </div>
-<script th:src="@{/js/jquery.min.js}"></script>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/sidebarmenu.js}"></script>
-<script th:src="@{/js/app.js}"></script>
-<script th:src="@{/js/chart.js}"></script>
-<script th:src="@{/js/data.js}"></script>
+
 <!-- solar icons -->
 <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
-
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
 <script>
-    function translateText() {
-        const inputText = document.querySelector('.input-area').value.trim();
-        const targetLang = document.getElementById('target-lang-select').value;
+    document.querySelector(".translate-action button").addEventListener("click", async () => {
+        const sourceText = document.querySelector(".input-area").value.trim();
+        const targetLang = document.getElementById("target-lang-select").value;
         const outputArea = document.querySelector('.output-area');
 
-        if (!inputText) {
-            alert('Please enter some text to translate.');
+        const inputArea = document.querySelector('.input-area');
+
+        inputArea.addEventListener('input', () => {
+            if (inputArea.value.trim() === '') {
+                outputArea.value = '';
+            }
+        });
+
+
+
+        if (!sourceText) {
+            alert("Please enter text to translate.");
             return;
         }
 
-        // Show loading state
-        outputArea.value = 'Translating...';
-
-        // Make API call to backend
-        fetch('/api/translate', {
-            method: 'POST',
+        const response = await fetch("/translation", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                text: inputText,
-                targetLang: targetLang
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            outputArea.value = data.translatedText;
-        })
-        .catch(error => {
-            alert('Error: ' + error.message);
-            outputArea.value = '';
+            body: JSON.stringify({ text: sourceText, targetLang: targetLang })
         });
-    }
 
-    // Add event listener for language detection
-    document.getElementById('detect-btn').addEventListener('click', function() {
-        const inputText = document.querySelector('.input-area').value.trim();
-        if (!inputText) {
-            alert('Please enter some text to detect language.');
-            return;
-        }
-
-        fetch('/api/detect-language', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ text: inputText })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            alert('Detected language: ' + data.language);
-        })
-        .catch(error => {
-            alert('Error: ' + error.message);
-        });
+        const data = await response.json();
+        document.querySelector(".output-area").value = data.translation || "Translation failed.";
     });
 
-    // Add event listener for language switch
-    document.getElementById('switch-btn').addEventListener('click', function() {
-        const inputText = document.querySelector('.input-area').value;
-        const outputText = document.querySelector('.output-area').value;
-        const targetLang = document.getElementById('target-lang-select').value;
-
-        if (outputText && outputText !== 'Translating...') {
-            document.querySelector('.input-area').value = outputText;
-            document.querySelector('.output-area').value = inputText;
-        }
-    });
 </script>
+
+
+
 </body>
-</html> 
+
+</html>
