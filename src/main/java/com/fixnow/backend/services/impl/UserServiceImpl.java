@@ -115,32 +115,32 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newUser);
     }
 
-    @Override
-    public String loginWithGoogle(String idToken) throws GeneralSecurityException, IOException {
-        GoogleIdToken.Payload payload = verifyToken(idToken);
-        Role freemiumRole = roleRepository.findByName("FREEMIUM_USER")
-                .orElseThrow(() -> new IllegalStateException("Default role ROLE_FREE not found"));;
-        assert payload != null;
-        String email = payload.getEmail();
-        String name = (String) payload.get("name");
-        String providerId = payload.getSubject(); // This is Google's unique user ID
-
-        User user = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(
-                        new User(
-                                null,                    // id (auto-generated)
-                                name,                    // username
-                                "",                      // password (not needed for OAuth)
-                                email,                   // email
-                                Provider.GOOGLE,         // provider
-                                providerId,               // providerId
-                                freemiumRole,
-                                null
-                        )
-                ));
-
-        return jwtUtil.generateToken(user.getUsername(), user.getId());
-    }
+//    @Override
+//    public String loginWithGoogle(String idToken) throws GeneralSecurityException, IOException {
+//        GoogleIdToken.Payload payload = verifyToken(idToken);
+//        Role freemiumRole = roleRepository.findByName("FREEMIUM_USER")
+//                .orElseThrow(() -> new IllegalStateException("Default role ROLE_FREE not found"));;
+//        assert payload != null;
+//        String email = payload.getEmail();
+//        String name = (String) payload.get("name");
+//        String providerId = payload.getSubject(); // This is Google's unique user ID
+//
+//        User user = userRepository.findByEmail(email)
+//                .orElseGet(() -> userRepository.save(
+//                        new User(
+//                                null,                    // id (auto-generated)
+//                                name,                    // username
+//                                "",                      // password (not needed for OAuth)
+//                                email,                   // email
+//                                Provider.GOOGLE,         // provider
+//                                providerId,               // providerId
+//                                freemiumRole,
+//                                null
+//                        )
+//                ));
+//
+//        return jwtUtil.generateToken(user.getUsername(), user.getId());
+//    }
     private GoogleIdToken.Payload verifyToken(String idTokenString) {
         try {
             //    @Value("${google.client.id}")

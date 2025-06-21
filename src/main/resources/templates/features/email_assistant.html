@@ -1,0 +1,1228 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fixnow</title>
+    <link rel="icon" type="image/png" th:href="@{images/light-logo.png}" />
+    <link rel="stylesheet" th:href="@{css/dashboard.css}" />
+    <link rel="stylesheet" th:href="@{css/email_writer.css}" />
+    <style>
+        textarea::placeholder {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        /* Fix overflow issues and color consistency */
+        html, body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc; /* Consistent background */
+        }
+
+        /* Page wrapper with consistent background */
+        .page-wrapper {
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Body wrapper with smooth color transition */
+        .body-wrapper {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+            margin-left: 260px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 1199px) {
+            .body-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        /* Enhanced scrollable body-wrapper-inner with smooth color integration */
+        .body-wrapper-inner {
+            padding: 2rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 50%, #f8fafc 100%);
+            position: relative;
+        }
+
+        /* Smooth gradient border for better integration */
+        .body-wrapper-inner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(124, 58, 237, 0.1) 10%,
+            rgba(124, 58, 237, 0.3) 50%,
+            rgba(124, 58, 237, 0.1) 90%,
+            transparent 100%);
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+
+        /* Sidebar with consistent background - no border */
+        .left-sidebar {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+        }
+
+        /* App header with smooth integration */
+        .app-header {
+            background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            border-left: none; /* Remove left border */
+            padding: 1rem 2rem;
+            margin-bottom: 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* App topstrip with better color harmony */
+        .app-topstrip {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
+            border-left: none; /* Remove left border */
+        }
+
+        /* Custom scrollbar with theme colors */
+        .body-wrapper-inner::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .body-wrapper-inner::-webkit-scrollbar-track {
+            background: rgba(248, 250, 252, 0.5);
+            border-radius: 4px;
+        }
+
+        .body-wrapper-inner::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #cbd5e1, #94a3b8);
+            border-radius: 4px;
+        }
+
+        .body-wrapper-inner::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #94a3b8, #64748b);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .body-wrapper-inner {
+                padding: 1.5rem 2rem;
+                max-width: 100%;
+                height: calc(100vh - 100px);
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .body-wrapper-inner {
+                padding: 1rem 1.5rem;
+                height: calc(100vh - 80px);
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }
+        }
+
+        /* Remove duplicate nested div styling */
+        .body-wrapper-inner .body-wrapper-inner {
+            padding: 0;
+            max-width: none;
+            margin: 0;
+            height: auto;
+            overflow: visible;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        /* Form section with subtle background integration - no left border */
+        .form-section {
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: fit-content;
+        }
+
+        /* Better grid spacing - maintain original form layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Improved input group spacing */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        /* Input fields without left border */
+        .input {
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Better textarea styling without left border */
+        .textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            resize: none;
+            font-family: inherit;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .char-counter {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            font-size: 12px;
+            color: #9ca3af;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Config dropdown improvements */
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .config-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .config-dropdown {
+            position: relative;
+        }
+
+        .config-button {
+            width: 100%;
+            height: 64px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px;
+        }
+
+        .config-button:hover {
+            border-color: #7c3aed;
+            background: rgba(124, 58, 237, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+        }
+
+        .config-button.active {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        }
+
+        .config-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .config-icon {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .config-button.active .config-icon {
+            color: #dc2626;
+        }
+
+        .config-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .config-button.active .config-label {
+            color: #dc2626;
+        }
+
+        .config-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 12px;
+            color: #9ca3af;
+            transition: transform 0.3s ease;
+        }
+
+        .config-button.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            margin-top: 4px;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #374151;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .dropdown-item.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+
+        .flag-emoji {
+            font-size: 16px;
+        }
+
+        .flag-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+
+        /* Config buttons without left border */
+        .config-button {
+            height: 64px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .config-button:hover {
+            border-color: #7c3aed;
+            background: rgba(124, 58, 237, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+        }
+
+        .config-button.active {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        }
+
+        .config-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .config-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .config-button.active .config-label {
+            color: #dc2626;
+        }
+
+        .config-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .flag-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+
+        .generate-button {
+            width: 100%;
+            height: 56px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .generate-button:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .generate-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sparkles-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Result card with enhanced styling - no left border */
+        .result-card {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            scroll-margin-top: 2rem;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .copy-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .result-content {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .generated-email {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .loading-animation {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 2rem 0;
+        }
+
+        .loading-bar {
+            height: 16px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-bar:nth-child(2) {
+            width: 75%;
+        }
+
+        .loading-bar:nth-child(3) {
+            width: 50%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Scroll to result animation */
+        .scroll-to-result {
+            animation: highlightResult 2s ease-in-out;
+        }
+
+        @keyframes highlightResult {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+            }
+        }
+
+        /* Ensure content is always visible */
+        .form-section:last-child {
+            margin-bottom: 4rem;
+        }
+
+        /* Sidebar adjustments */
+        @media (min-width: 1200px) {
+            .left-sidebar {
+                width: 260px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!--  Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed" >
+
+    <!-- App Topstrip -->
+    <div class="app-topstrip bg-custom-blue py-3 px-4 w-100 d-lg-flex align-items-center justify-content-between">
+        <div class="d-none d-sm-flex align-items-center justify-content-center gap-9 mb-3 mb-lg-0" >
+            <a class="d-flex justify-content-center" href="/">
+                <img th:src="@{images/light-logo.png}" width="50">
+            </a>
+
+            <div class="position-fixed top-2 end-0 z-3 d-none d-xl-flex align-items-center gap-2 border-start border-white ps-9">
+                <!-- Templates link removed here -->
+                <a target="_blank" href="#"
+                   class="link-hover d-flex align-items-center gap-3 border-0 text-white lh-sm fs-4 me-4">
+                    <iconify-icon class="fs-6" icon="solar:question-circle-linear"></iconify-icon>
+                    Help
+                </a>
+                <a target="_blank" href="#"
+                   class="link-hover d-flex align-items-center gap-3 border-0 text-white lh-sm fs-4 me-4">
+                    <iconify-icon class="fs-6" icon="solar:case-round-linear"></iconify-icon>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div>
+            <div class="brand-logo d-flex align-items-center justify-content-between" style="border-right: #635bff;" >
+                <a href="#" class="text-nowrap logo-img">
+                    <div style="background-color: rgb(1, 1, 63); padding: 3px; border-radius: 50%; display: inline-block;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                <ul id="sidebarnav">
+                    <li class="nav-small-cap d-flex align-items-center">
+                        <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4 me-2"></iconify-icon>
+                        <div class="d-flex align-items-center">
+                            <iconify-icon icon="material-symbols:home-outline" class="fs-6 me-2" style="color: #635bff;"></iconify-icon>
+                            <span class="fs-12" style="color:#635bff;">Home</span>
+                        </div>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/paraphraser">
+                            <iconify-icon icon="tabler:repeat"></iconify-icon>
+                            <span class="hide-menu">Paraphraser</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="/grammar_checker">
+                            <iconify-icon icon="material-symbols:spellcheck"></iconify-icon>
+                            <span class="hide-menu">Grammar Checker</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item btn-active">
+                        <a class="sidebar-link" href="/summarizer">
+                            <iconify-icon icon="mdi:format-quote-close"></iconify-icon>
+                            <span class="hide-menu">Summarizer</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item btn-active">
+                        <a class="sidebar-link" href="/translate">
+                            <iconify-icon icon="mdi:translate"></iconify-icon>
+                            <span class="hide-menu">Translate</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
+                            <div class="d-flex align-items-center gap-3">
+                  <span class="d-flex">
+                    <iconify-icon icon="mdi:toolbox-outline"></iconify-icon>
+                  </span>
+                                <span class="hide-menu">Toolkits</span>
+                            </div>
+                        </a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="/email_writing_assistant">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">Email writer</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">CV generator</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="/under_development_process">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">Contact Us</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link justify-content-between" href="#">
+                                    <div class="d-flex align-items-center gap-3">
+                      <span class="d-flex">
+                        <span class="icon-small"></span>
+                      </span>
+                                        <span class="hide-menu">Pricing</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <span class="sidebar-divider lg"></span>
+                    </li>
+
+                </ul>
+                <div class="unlimited-access d-inline-flex align-items-center bg-primary-subtle position-relative p-3 rounded-3 gap-2">
+                    <h6 class="fw-semibold fs-3 mb-0 text-black lh-sm">Fixnow Premium</h6>
+                    <a href="#" class="btn btn-primary fs-2 fw-semibold lh-sm">Check</a>
+                </div>
+
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </aside>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+        <!--  Header Start -->
+        <header class="app-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="sidebar-toggler d-xl-none d-block cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-align-justified fs-8"></i>
+                    </div>
+                    <h4 class="position-absolute top-10 start-50 translate-middle m-0 fw-bold" style="position: relative; top: 30px;">Email Writer</h4>
+                </div>
+            </div>
+        </header>
+        <!--  Header End -->
+
+        <div class="body-wrapper-inner" id="scrollableContent">
+            <div class="form-section">
+                <!-- Name and Receiver Fields -->
+                <div class="form-grid">
+                    <div class="input-group">
+                        <div class="label">
+                            Your Name
+                            <div class="info-icon">i</div>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="text" class="input" id="yourName" th:value="${userName}" maxlength="250">
+                            <span class="char-counter" id="nameCounter" th:value="${nameLength}/50"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label">
+                            To (Receiver)
+                            <div class="info-icon">i</div>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="text" class="input" id="receiver" placeholder="Person or Company" maxlength="250">
+                            <span class="char-counter" id="receiverCounter">0/250</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Goal Section -->
+                <div class="input-group">
+                    <div class="label">
+                        What's your email goal? Key points:
+                        <div class="info-icon">i</div>
+                    </div>
+                    <div class="input-wrapper">
+              <textarea class="textarea" id="emailGoal" placeholder="For best email results, provide only key points in any language:
+-main point
+-important point
+-next points
+-final point
+
+The AI will use these to generate a complete email." maxlength="2000"></textarea>
+                        <span class="char-counter" id="goalCounter">0/2000</span>
+                    </div>
+                </div>
+
+                <!-- Configuration Options -->
+                <div class="config-grid" style="margin-top: 20px;">
+                    <!-- Language Dropdown -->
+                    <div class="config-dropdown">
+                        <button class="config-button active" onclick="toggleDropdown('language')">
+                            <div class="config-header">
+                                <iconify-icon icon="material-symbols:language" class="config-icon"></iconify-icon>
+                                <span class="config-label">Language</span>
+                            </div>
+                            <span class="config-value">Vietnamese</span>
+                            <iconify-icon icon="material-symbols:keyboard-arrow-down" class="dropdown-arrow"></iconify-icon>
+                        </button>
+                        <div class="dropdown-menu" id="language-dropdown">
+                            <div class="dropdown-item active" onclick="selectOption('language', 'Vietnamese', '🇻🇳')">
+                                <span class="flag-emoji">🇻🇳</span> Vietnamese
+                            </div>
+                            <div class="dropdown-item" onclick="selectOption('language', 'English', '🇺🇸')">
+                                <span class="flag-emoji">🇺🇸</span> English
+                            </div>
+                            <div class="dropdown-item" onclick="selectOption('language', 'Spanish', '🇪🇸')">
+                                <span class="flag-emoji">🇪🇸</span> Spanish
+                            </div>
+                            <div class="dropdown-item" onclick="selectOption('language', 'French', '🇫🇷')">
+                                <span class="flag-emoji">🇫🇷</span> French
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Length Dropdown -->
+                    <div class="config-dropdown">
+                        <button class="config-button" onclick="toggleDropdown('length')">
+                            <div class="config-header">
+                                <iconify-icon icon="material-symbols:straighten" class="config-icon"></iconify-icon>
+                                <span class="config-label">Length</span>
+                            </div>
+                            <span class="config-value">Auto</span>
+                            <iconify-icon icon="material-symbols:keyboard-arrow-down" class="dropdown-arrow"></iconify-icon>
+                        </button>
+                        <div class="dropdown-menu" id="length-dropdown">
+                            <div class="dropdown-item active" onclick="selectOption('length', 'Auto')">Auto</div>
+                            <div class="dropdown-item" onclick="selectOption('length', 'Short')">Short</div>
+                            <div class="dropdown-item" onclick="selectOption('length', 'Medium')">Medium</div>
+                            <div class="dropdown-item" onclick="selectOption('length', 'Long')">Long</div>
+                        </div>
+                    </div>
+
+                    <!-- Style Dropdown -->
+                    <div class="config-dropdown">
+                        <button class="config-button" onclick="toggleDropdown('style')">
+                            <div class="config-header">
+                                <iconify-icon icon="material-symbols:palette-outline" class="config-icon"></iconify-icon>
+                                <span class="config-label">Style</span>
+                            </div>
+                            <span class="config-value">Auto</span>
+                            <iconify-icon icon="material-symbols:keyboard-arrow-down" class="dropdown-arrow"></iconify-icon>
+                        </button>
+                        <div class="dropdown-menu" id="style-dropdown">
+                            <div class="dropdown-item active" onclick="selectOption('style', 'Auto')">Auto</div>
+                            <div class="dropdown-item" onclick="selectOption('style', 'Creative')">Creative</div>
+                            <div class="dropdown-item" onclick="selectOption('style', 'Professional')">Professional</div>
+                        </div>
+                    </div>
+
+                    <!-- Tone Dropdown -->
+                    <div class="config-dropdown">
+                        <button class="config-button" onclick="toggleDropdown('tone')">
+                            <div class="config-header">
+                                <iconify-icon icon="material-symbols:mood" class="config-icon"></iconify-icon>
+                                <span class="config-label">Tone</span>
+                            </div>
+                            <span class="config-value">Auto</span>
+                            <iconify-icon icon="material-symbols:keyboard-arrow-down" class="dropdown-arrow"></iconify-icon>
+                        </button>
+                        <div class="dropdown-menu" id="tone-dropdown">
+                            <div class="dropdown-item active" onclick="selectOption('tone', 'Auto')">Auto</div>
+                            <div class="dropdown-item" onclick="selectOption('tone', 'Casual')">Casual</div>
+                            <div class="dropdown-item" onclick="selectOption('tone', 'Formal')">Formal</div>
+                            <div class="dropdown-item" onclick="selectOption('tone', 'Friendly')">Friendly</div>
+                        </div>
+                    </div>
+
+                    <!-- Mood Dropdown -->
+                    <div class="config-dropdown">
+                        <button class="config-button" onclick="toggleDropdown('mood')">
+                            <div class="config-header">
+                                <iconify-icon icon="material-symbols:sentiment-satisfied" class="config-icon"></iconify-icon>
+                                <span class="config-label">Mood</span>
+                            </div>
+                            <span class="config-value">Auto</span>
+                            <iconify-icon icon="material-symbols:keyboard-arrow-down" class="dropdown-arrow"></iconify-icon>
+                        </button>
+                        <div class="dropdown-menu" id="mood-dropdown">
+                            <div class="dropdown-item active" onclick="selectOption('mood', 'Auto')">Auto</div>
+                            <div class="dropdown-item" onclick="selectOption('mood', 'Positive')">Positive</div>
+                            <div class="dropdown-item" onclick="selectOption('mood', 'Neutral')">Neutral</div>
+                            <div class="dropdown-item" onclick="selectOption('mood', 'Serious')">Serious</div>
+                        </div>
+                    </div>
+
+                    <!-- Emoji Dropdown -->
+                    <div class="config-dropdown">
+                        <button class="config-button" onclick="toggleDropdown('emoji')">
+                            <div class="config-header">
+                                <iconify-icon icon="material-symbols:emoji-emotions-outline" class="config-icon"></iconify-icon>
+                                <span class="config-label">Emoji</span>
+                            </div>
+                            <span class="config-value">Auto</span>
+                            <iconify-icon icon="material-symbols:keyboard-arrow-down" class="dropdown-arrow"></iconify-icon>
+                        </button>
+                        <div class="dropdown-menu" id="emoji-dropdown">
+                            <div class="dropdown-item active" onclick="selectOption('emoji', 'Auto')">Auto</div>
+                            <div class="dropdown-item" onclick="selectOption('emoji', 'Yes')">Yes</div>
+                            <div class="dropdown-item" onclick="selectOption('emoji', 'None')">None</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button class="generate-button" id="generateButton">
+                    <span class="sparkles-icon" id="sparklesIcon">✨</span>
+                    <span id="buttonText">Write Email with AI</span>
+                </button>
+
+                <!-- Generated Email Display -->
+                <div class="result-card" id="resultCard">
+                    <div id="placeholderContent">
+                        <div class="placeholder-text">
+                            Exciting! Here's where your AI written email will show up.
+                        </div>
+                    </div>
+
+                    <div id="loadingContent" class="hidden">
+                        <div class="loading-animation">
+                            <div class="loading-bar"></div>
+                            <div class="loading-bar"></div>
+                            <div class="loading-bar"></div>
+                        </div>
+                    </div>
+
+                    <div id="resultContent" class="hidden">
+                        <div class="result-header">
+                            <h3 class="result-title">Generated Email</h3>
+                            <a id="sendEmailBtn" class="copy-button fw-semibold"
+                               data-subject=""
+                               data-body="">
+                                Send email
+                            </a>
+
+                        </div>
+                        <div class="result-content">
+                            <div class="generated-email" id="generatedEmail"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{js/jquery.min.js}"></script>
+<script th:src="@{js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{js/sidebarmenu.js}"></script>
+<script th:src="@{js/app.js}"></script>
+<script th:src="@{js/chart.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+
+<script>
+
+    // Character counters
+    function updateCounter(inputId, counterId, maxLength) {
+        const input = document.getElementById(inputId);
+        const counter = document.getElementById(counterId);
+
+        // Cập nhật ngay khi trang load (để xử lý giá trị được gán sẵn từ server)
+        counter.textContent = `${input.value.length}/${maxLength}`;
+
+        input.addEventListener('input', function() {
+            const length = this.value.length;
+            counter.textContent = `${length}/${maxLength}`;
+        });
+    }
+
+
+    // Smooth scroll to result function
+    function scrollToResult() {
+        const resultCard = document.getElementById('resultCard');
+        const scrollableContent = document.getElementById('scrollableContent');
+
+        // Calculate position to scroll to
+        const resultPosition = resultCard.offsetTop - 100; // 100px offset from top
+
+        // Smooth scroll to result
+        scrollableContent.scrollTo({
+            top: resultPosition,
+            behavior: 'smooth'
+        });
+
+        // Add highlight animation
+        resultCard.classList.add('scroll-to-result');
+        setTimeout(() => {
+            resultCard.classList.remove('scroll-to-result');
+        }, 2000);
+    }
+
+
+    // Initialize counters
+    updateCounter('yourName', 'nameCounter', 50);
+    updateCounter('receiver', 'receiverCounter', 50);
+    updateCounter('emailGoal', 'goalCounter', 2000);
+
+    // Generate email functionality
+    document.getElementById('generateButton').addEventListener('click', async () => {
+        const sender = document.getElementById('yourName').value;
+        const receiver = document.getElementById('receiver').value;
+        const keyPoints = document.getElementById('emailGoal').value;
+        const language = document.querySelector('#language-dropdown .dropdown-item.active').textContent.trim();
+        const length = document.querySelector('#length-dropdown .dropdown-item.active').textContent.trim();
+        const style = document.querySelector('#style-dropdown .dropdown-item.active').textContent.trim();
+        const tone = document.querySelector('#tone-dropdown .dropdown-item.active').textContent.trim();
+        const mood = document.querySelector('#mood-dropdown .dropdown-item.active').textContent.trim();
+        const emoji = document.querySelector('#emoji-dropdown .dropdown-item.active').textContent.trim();
+
+        const requestBody = {
+            sender, receiver, keyPoints,
+            language, length, style, tone,mood,emoji
+        };
+
+        // UI loading state
+        document.getElementById("placeholderContent").classList.add("hidden");
+        document.getElementById("loadingContent").classList.remove("hidden");
+        document.getElementById("resultContent").classList.add("hidden");
+
+        try {
+            const response = await fetch('/email_writing', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const result = await response.json();
+
+            document.getElementById("loadingContent").classList.add("hidden");
+            document.getElementById("resultContent").classList.remove("hidden");
+            document.getElementById("generatedEmail").innerHTML = `
+        <strong>Subject:</strong> ${result.subject}<br><br>
+        ${result.emailBody.replace(/\n/g, '<br>')}
+    `;
+
+            // ⬇️ Thêm đoạn này ở đây
+            const subject = result.subject || "Your AI Generated Email";
+            const body = result.emailBody || "";
+
+            const sendBtn = document.getElementById("sendEmailBtn");
+            sendBtn.dataset.subject = subject;
+            sendBtn.dataset.body = body;
+
+        } catch (error) {
+            console.error('Failed to generate email:', error);
+            document.getElementById("loadingContent").classList.add("hidden");
+            document.getElementById("resultContent").classList.remove("hidden");
+            document.getElementById("generatedEmail").innerText = "⚠️ Failed to generate email.";
+        }
+
+    });
+    document.getElementById("sendEmailBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        const subject = encodeURIComponent(this.getAttribute("data-subject"));
+        const body = encodeURIComponent(this.getAttribute("data-body"));
+
+        const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`;
+        window.open(gmailLink, '_blank');
+    });
+
+
+    // Copy email functionality
+    function copyEmail() {
+        const emailText = document.getElementById('generatedEmail').textContent;
+        navigator.clipboard.writeText(emailText).then(() => {
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        });
+    }
+
+    // Config button interactions
+    document.querySelectorAll('.config-button').forEach(button => {
+        button.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+
+    // Dropdown functionality
+    function toggleDropdown(type) {
+        const dropdown = document.getElementById(type + '-dropdown');
+        const button = dropdown.previousElementSibling;
+        const allDropdowns = document.querySelectorAll('.dropdown-menu');
+        const allButtons = document.querySelectorAll('.config-button');
+
+        // Close all other dropdowns
+        allDropdowns.forEach(menu => {
+            if (menu !== dropdown) {
+                menu.classList.remove('show');
+            }
+        });
+
+        allButtons.forEach(btn => {
+            if (btn !== button) {
+                btn.classList.remove('open');
+            }
+        });
+
+        // Toggle current dropdown
+        dropdown.classList.toggle('show');
+        button.classList.toggle('open');
+    }
+
+    function selectOption(type, value, flag = null) {
+        const button = document.querySelector(`#${type}-dropdown`).previousElementSibling;
+        const valueElement = button.querySelector('.config-value');
+        const dropdown = document.getElementById(type + '-dropdown');
+
+        // Update button value
+        valueElement.textContent = value;
+
+        // Update active state in dropdown
+        dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        event.target.classList.add('active');
+
+        // Update button active state for language
+        if (type === 'language') {
+            document.querySelectorAll('.config-button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Update flag icon if provided
+            if (flag) {
+                const flagIcon = button.querySelector('.flag-icon');
+                if (flagIcon) {
+                    flagIcon.textContent = flag;
+                }
+            }
+        }
+
+        // Close dropdown
+        dropdown.classList.remove('show');
+        button.classList.remove('open');
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.config-dropdown')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            document.querySelectorAll('.config-button').forEach(btn => {
+                btn.classList.remove('open');
+            });
+        }
+    });
+</script>
+</body>
+</html>

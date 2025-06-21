@@ -24,6 +24,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    private String firstName;
+    private String lastName;
+
     private String password; // Remember to hash passwords in a real application!
 
     @Column(nullable = false, unique = true)

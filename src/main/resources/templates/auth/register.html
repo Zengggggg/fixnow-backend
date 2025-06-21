@@ -68,24 +68,42 @@
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 
         <form th:action="@{/doRegister}" method="post" th:object="${user}">
+            <!-- Username -->
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" th:field="*{username}" required>
                 <div th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></div>
             </div>
 
+            <!-- First Name -->
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+                <div th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}"></div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+                <div th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}"></div>
+            </div>
+
+            <!-- Email -->
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" th:field="*{email}" required>
                 <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></div>
             </div>
 
+            <!-- Password -->
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" th:field="*{password}" required>
                 <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
             </div>
 
+            <!-- Confirm Password -->
             <div class="form-group">
                 <label for="confirmPassword">Confirm Password</label>
                 <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
@@ -94,6 +112,7 @@
 
             <button type="submit" class="btn-register">Register</button>
         </form>
+
 
         <div class="login-link">
             Already have an account? <a th:href="@{/login}">Login here</a>

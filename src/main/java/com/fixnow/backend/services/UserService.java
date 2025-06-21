@@ -14,7 +14,7 @@ public interface UserService {
     User findByEmail(String email);
     UserResponseDto updateUser(Long id, UserUpdateDto updateDto); // Needs authentication context later
     User findOrCreateGoogleUser(String email, String name);
-    String loginWithGoogle(String idToken) throws GeneralSecurityException, IOException;
+//    String loginWithGoogle(String idToken) throws GeneralSecurityException, IOException;
 
     User findById(Long id);
 }
