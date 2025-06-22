@@ -5,15 +5,19 @@ import com.fixnow.backend.dtos.response.UserResponseDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
 import com.fixnow.backend.models.Role;
 import com.fixnow.backend.models.User;
+import com.fixnow.backend.models.VerificationToken;
 import com.fixnow.backend.mun.Provider;
 import com.fixnow.backend.repositories.RoleRepository;
 import com.fixnow.backend.repositories.UserRepository;
+import com.fixnow.backend.repositories.VerificationTokenRepository;
+import com.fixnow.backend.services.EmailVerifyService;
 import com.fixnow.backend.services.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,8 +26,10 @@ import com.fixnow.backend.util.JwtUtil;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor // Lombok constructor injection for final fields
@@ -32,10 +38,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final EmailVerifyService emailVerifyService;
 
     @Override
-    public UserResponseDto registerUser(UserRegistrationDto registrationDto) {
+    public UserResponseDto registerUser(UserRegistrationDto registrationDto, HttpServletRequest request) {
         // Check if username or email already exists
         if (!registrationDto.getPassword().equals(registrationDto.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match.");
@@ -47,13 +54,25 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalStateException("Default role ROLE_FREE not found"));;
         User newUser = new User();
         newUser.setUsername(registrationDto.getUsername());
+        newUser.setFirstName(registrationDto.getFirstName());
+        newUser.setLastName(registrationDto.getLastName());
         newUser.setEmail(registrationDto.getEmail());
         // Encode the password before saving
         newUser.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         newUser.setProvider(Provider.LOCAL);
         newUser.setRole(freemiumRole);
+        newUser.setEnabled(false);
 
         User savedUser = userRepository.save(newUser);
+
+        String token = UUID.randomUUID().toString();
+        VerificationToken vt = new VerificationToken();
+        vt.setUser(savedUser);
+        vt.setToken(token);
+        vt.setExpiryDate(LocalDateTime.now().plusDays(1));
+        verificationTokenRepository.save(vt);
+
+        emailVerifyService.sendVerificationEmail(savedUser,token,request);
 
         return mapUserToResponseDto(savedUser);
     }

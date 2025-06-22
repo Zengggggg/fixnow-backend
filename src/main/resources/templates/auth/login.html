@@ -22,6 +22,18 @@
                                 <img th:src="@{/images/Logo.png}" alt="">
                             </a>
                             <p class="text-center">Write better your own way</p>
+                            <div th:if="${param.error == 'disabled'}" class="alert alert-warning">
+                                Tài khoản của bạn chưa được xác minh. Vui lòng kiểm tra email.
+                            </div>
+
+                            <div th:if="${param.error == 'bad_credentials'}" class="alert alert-danger">
+                                Email hoặc mật khẩu không đúng.
+                            </div>
+
+                            <div th:if="${param.logout}" class="alert alert-success">
+                                Đăng xuất thành công.
+                            </div>
+
                             <form th:action="@{/login}" method="post">
                                 <div class="mb-3">
                                     <label for="exampleInputEmail1" class="form-label">Email</label>

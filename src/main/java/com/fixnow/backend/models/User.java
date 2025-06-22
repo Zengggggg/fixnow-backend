@@ -26,6 +26,7 @@ public class User {
 
     private String firstName;
     private String lastName;
+    private boolean enabled;
 
     private String password; // Remember to hash passwords in a real application!
 

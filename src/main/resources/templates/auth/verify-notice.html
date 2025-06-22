@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/light-logo.png}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/verify-notice.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực Email - Kiểm tra hộp thư</title>
+
+</head>
+<body>
+<div class="container">
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <svg class="notification-icon" viewBox="0 0 24 24">
+                <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+            </svg>
+            <span id="notificationText">Email đã được gửi lại thành công!</span>
+        </div>
+    </div>
+
+    <div class="email-icon">
+        <svg viewBox="0 0 24 24">
+            <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" />
+        </svg>
+    </div>
+
+    <h1>Kiểm tra email của bạn!</h1>
+
+    <p class="subtitle">
+        Chúng tôi đã gửi một email xác thực đến địa chỉ email của bạn.
+        Vui lòng kiểm tra hộp thư và nhấp vào liên kết để kích hoạt tài khoản.
+    </p>
+
+    <div class="email-address" id="userEmail">
+        example@email.com
+    </div>
+
+    <div class="instructions">
+        <h3>Hướng dẫn:</h3>
+        <ul>
+            <li>Kiểm tra hộp thư đến (Inbox) của bạn</li>
+            <li>Tìm email từ chúng tôi với tiêu đề "Xác thực tài khoản"</li>
+            <li>Nhấp vào liên kết "Kích hoạt tài khoản" trong email</li>
+            <li>Nếu không thấy email, hãy kiểm tra thư mục Spam/Junk</li>
+        </ul>
+    </div>
+
+    <div class="buttons">
+        <button class="btn btn-primary" id="resendBtn" onclick="resendEmail()">
+            Gửi lại email
+        </button>
+        <a href="/" class="btn btn-secondary">
+            Về trang chủ
+        </a>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span>Đang gửi email...</span>
+    </div>
+
+    <div class="footer">
+        <p>Không nhận được email? <a href="/support">liên hệ hỗ trợ</a></p>
+        <p style="margin-top: 10px;">© 2024 Your Company. All rights reserved.</p>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    if (email) {
+        document.getElementById('userEmail').textContent = email;
+    }
+
+    function showNotification(message, isError = false) {
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const notificationIcon = notification.querySelector('.notification-icon path');
+
+        notificationText.textContent = message;
+
+        if (isError) {
+            notification.classList.add('error');
+            notificationIcon.setAttribute('d', 'M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z');
+        } else {
+            notification.classList.remove('error');
+            notificationIcon.setAttribute('d', 'M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z');
+        }
+
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 4000);
+    }
+
+    function resendEmail() {
+        const loading = document.getElementById('loading');
+        const button = document.getElementById('resendBtn');
+        const emailText = document.getElementById('userEmail').textContent;
+
+        loading.style.display = 'block';
+        button.disabled = true;
+        button.textContent = 'Đang gửi...';
+
+        fetch('/resend-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'email=' + encodeURIComponent(emailText)
+        })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                if (data.error) {
+                    handleError(data.error);
+                } else {
+                    showNotification(data.message || 'Email xác minh đã được gửi lại!');
+                    button.disabled = true;
+                    button.textContent = 'Đã gửi';
+                    setTimeout(() => {
+                        button.disabled = false;
+                        button.textContent = 'Gửi lại email';
+                    }, 30000);
+                }
+            })
+            .catch(() => handleError('Lỗi kết nối. Vui lòng thử lại sau.'));
+    }
+
+    function handleError(msg) {
+        const loading = document.getElementById('loading');
+        const button = document.getElementById('resendBtn');
+
+        loading.style.display = 'none';
+        button.disabled = false;
+        button.textContent = 'Gửi lại email';
+
+        showNotification(msg || 'Có lỗi xảy ra khi gửi email.', true);
+    }
+
+    // Fallback timeout
+    setTimeout(() => {
+        if (document.getElementById('loading').style.display === 'block') {
+            handleError();
+        }
+    }, 10000);
+</script>
+</body>
+</html>

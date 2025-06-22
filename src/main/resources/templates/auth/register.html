@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fixnow - Register</title>
     <link rel="icon" type="image/png" th:href="@{/images/light-logo.png}" />
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <style>
+        body {
+            background: #f4f7fb;
+        }
         .register-container {
             max-width: 500px;
             margin: 50px auto;
@@ -58,7 +61,7 @@
     </style>
 </head>
 <body>
-    <div class="register-container">
+    <div class="register-container" >
         <h2 class="text-center mb-4">Create an Account</h2>
         
         <!-- Error message -->
@@ -70,42 +73,42 @@
         <form th:action="@{/doRegister}" method="post" th:object="${user}">
             <!-- Username -->
             <div class="form-group">
-                <label for="username">Username</label>
+                <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" th:field="*{username}" required>
                 <div th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></div>
             </div>
 
             <!-- First Name -->
             <div class="form-group">
-                <label for="firstName">First Name</label>
+                <label for="firstName" class="form-label">First Name</label>
                 <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
                 <div th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}"></div>
             </div>
 
             <!-- Last Name -->
             <div class="form-group">
-                <label for="lastName">Last Name</label>
+                <label for="lastName" class="form-label">Last Name</label>
                 <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
                 <div th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}"></div>
             </div>
 
             <!-- Email -->
             <div class="form-group">
-                <label for="email">Email</label>
+                <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" th:field="*{email}" required>
                 <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></div>
             </div>
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" th:field="*{password}" required>
                 <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
             </div>
 
             <!-- Confirm Password -->
             <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
                 <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
                 <div th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger" th:errors="*{confirmPassword}"></div>
             </div>

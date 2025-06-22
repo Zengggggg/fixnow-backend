@@ -5,311 +5,536 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>FixNow</title>
-    <!-- Favicon-->
+    <meta name="description" content="FixNow - AI-powered writing assistant with grammar checker, paraphraser, summarizer, and professional writing tools" />
+    <meta name="keywords" content="grammar checker, paraphraser, summarizer, AI writing, writing assistant" />
+    <meta name="author" content="FixNow Team" />
+    <meta property="og:title" content="FixNow - AI Writing Assistant" />
+    <meta property="og:description" content="Enhance your writing with AI-powered tools" />
+    <meta property="og:type" content="website" />
+
+    <title>FixNow - AI Writing Assistant</title>
+
+    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" th:href="@{/images/light-logo.png}" />
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Core theme CSS (includes Bootstrap)-->
+
+
+    <!-- Bootstrap icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link th:href="@{/css/home.css}" rel="stylesheet" />
 </head>
 <body>
-    <div sec:authorize="isAuthenticated()">
-        <nav class="navbar navbar-expand-lg py-3">
-            <div class="container">
-                <a class="navbar-brand me-4" href="#">
-                    <img th:src="@{/images/Logo.png}" />
-<!--                    <b>Fixnow</b>-->
-                </a>
+<!-- Authenticated User View -->
+<div sec:authorize="isAuthenticated()">
+    <nav class="navbar navbar-expand-lg py-3 sticky-top">
+        <div class="container">
+            <a class="navbar-brand me-4" th:href="@{/}">
+                <img th:src="@{/images/Logo.png}" alt="FixNow Logo" style="width: 45px" />
+            </a>
 
-                <!-- Left-aligned dropdowns -->
-                <div class="d-flex align-items-center">
-                    <div class="dropdown me-3">
-                        <a class="btn btn-link dropdown-toggle text-dark text-decoration-none" href="#" id="featuresDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Features
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="featuresDropdown">
-                            <li><a class="dropdown-item" href="#">Feature 1</a></li>
-                            <li><a class="dropdown-item" href="#">Feature 2</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="dropdown me-4">
-                        <a class="btn btn-link dropdown-toggle text-dark text-decoration-none" href="#" id="pricingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pricing
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="pricingDropdown">
-                            <li><a class="dropdown-item" href="#">Plan A</a></li>
-                            <li><a class="dropdown-item" href="#">Plan B</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Toggle for mobile view -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Right-aligned nav items -->
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link me-4" href="#">Contact</a></li>
-                        <li class="nav-item d-flex align-items-center">
-                            <a class="btn btn-upgrade me-4" href="#" style="background-color: #A958FF; color: white; border-radius: 10px; padding: 6px 12px; text-decoration: none;">
-                                Upgrade Your Account
-                            </a>
-                            <a href="#" class="nav-link p-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                    <path d="M13.468 12.37C12.758 11.226 11.44 10.5 8 10.5s-4.758.726-5.468 1.87A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                                    <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                                    <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1z"/>
-                                </svg>
-                            </a>
-                        </li>
+            <!-- Left-aligned navigation -->
+            <div class="d-flex align-items-center">
+                <div class="dropdown me-3">
+                    <a class="btn btn-link dropdown-toggle text-dark text-decoration-none fw-semibold"
+                       href="#" id="featuresDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-grid-3x3-gap me-1"></i> Features
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="featuresDropdown">
+                        <li><a class="dropdown-item" th:href="@{/paraphraser}">
+                            <i class="bi bi-arrow-repeat me-2"></i> Paraphraser
+                        </a></li>
+                        <li><a class="dropdown-item" th:href="@{/grammar_checker}">
+                            <i class="bi bi-check-circle me-2"></i> Grammar Checker
+                        </a></li>
+                        <li><a class="dropdown-item" th:href="@{/summarizer}">
+                            <i class="bi bi-file-text me-2"></i> Summarizer
+                        </a></li>
+                        <li><a class="dropdown-item" th:href="@{/translate}">
+                            <i class="bi bi-translate me-2"></i> Auto Translate
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-muted" th:href="@{/email_writing_assistant}">
+                            <i class="bi bi-envelope me-2"></i> Email Assistant
+                            <span class="badge bg-warning text-dark ms-2">Premium</span>
+                        </a></li>
+                        <li><a class="dropdown-item text-muted" th:href="@{/under_development_process}">
+                            <i class="bi bi-person-vcard me-2"></i> CV Generator
+                            <span class="badge bg-warning text-dark ms-2">Premium</span>
+                        </a></li>
                     </ul>
                 </div>
-            </div>
-        </nav>
-        <!-- Header-->
-        <header class="py-3">
-            <div class="container px-lg-5">
-                <div class="row g-3 align-items-stretch">
-                    <!-- Left Box: Text -->
-                    <div class="col-md-6 d-flex">
-                        <div class="custom-auth-box bg-light">
-                            <h1 class="headline">"Viết hay hơn theo phong cách của bạn"</h1>
-                            <p class="description">Use AI power to enhance and improve your writing performance – while retaining your individuality.</p>
-                            <div class="button-group">
-                                <a class="btn btn-primary me-2 signup-btn" href="#">Go to your workspace</a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Right Box: Image -->
-                    <div class="col-md-6">
-                        <div class="bg-light p-4 h-100 rounded-3 d-flex justify-content-center align-items-center">
-                            <img th:src="@{/images/header.png}" alt="Header Illustration" style="max-height: 500px; width: auto;" />
-                        </div>
-                    </div>
+                <div class="me-4">
+                    <a class="btn btn-link text-dark text-decoration-none fw-semibold" th:href="@{/pricing}">
+                        <i class="bi bi-tag me-1"></i> Pricing
+                    </a>
                 </div>
             </div>
-        </header>
-        <!-- Page Content-->
-        <section class="pt-4">
-            <div class="container px-lg-5">
-                <!-- Page Features -->
-                <div class="row gx-lg-5">
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/paraphraser" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Paraphraser</h2>
-                                    <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/grammar_checker" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100 ">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Grammar checker</h2>
-                                    <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/summarizer" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Summarization</h2>
-                                    <p class="mb-0">Condense long texts into concise summaries.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/under_development_process" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Toolkits</h2>
-                                    <p class="mb-0">Use toolkits to make everyday tasks faster, easier, and more effective.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-        </footer>
-    </div>
 
-    <div sec:authorize="isAnonymous()">
-        <nav class="navbar navbar-expand-lg py-3">
-            <div class="container">
-                <a class="navbar-brand me-4" href="#">
-                    <img th:src="@{/images/Logo.png}" />
-<!--                    <b>Fixnow</b>-->
-                </a>
+            <!-- Mobile toggle -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list"></i>
+            </button>
 
-                <!-- Left-aligned dropdowns -->
-                <div class="d-flex align-items-center">
-                    <div class="dropdown me-3">
-                        <a class="btn btn-link dropdown-toggle text-dark text-decoration-none" href="#" id="featuresDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Features
+            <!-- Right-aligned navigation -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link me-3" href="#contact">
+                            <i class="bi me-1"></i> Contact
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="featuresDropdown">
-                            <li><a class="dropdown-item" href="#">Feature 1</a></li>
-                            <li><a class="dropdown-item" href="#">Feature 2</a></li>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-upgrade me-3" href="#upgrade">
+                            <i class="bi bi-star me-1"></i> Upgrade Account
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle fs-4"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#profile">
+                                <i class="bi bi-person me-2"></i> Profile
+                            </a></li>
+                            <li><a class="dropdown-item" href="#settings">
+                                <i class="bi bi-gear me-2"></i> Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/logout}">
+                                <i class="bi bi-box-arrow-right me-2"></i> Logout
+                            </a></li>
                         </ul>
-                    </div>
-
-                    <div class="dropdown me-4">
-                        <a class="btn btn-link dropdown-toggle text-dark text-decoration-none" href="#" id="pricingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pricing
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="pricingDropdown">
-                            <li><a class="dropdown-item" href="#">Plan A</a></li>
-                            <li><a class="dropdown-item" href="#">Plan B</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Toggle for mobile view -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Right-aligned nav items -->
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link me-4" href="#">Contact</a></li>
-                        <li class="nav-item">
-                            <a class="btn btn-login me-2" th:href="@{/login}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-signup" th:href="@{/register}">Sign Up</a>
-                        </li>
-                    </ul>
-                </div>
+                    </li>
+                </ul>
             </div>
-        </nav>
-        <!-- Header-->
-        <header class="py-3">
-            <div class="container px-lg-5">
-                <div class="row g-3 align-items-stretch">
-                    <!-- Left Box: Text -->
-                    <div class="col-md-6 d-flex">
-                        <div class="custom-auth-box bg-light">
-                            <h1 class="headline">"Viết hay hơn theo phong cách của bạn"</h1>
-                            <p class="description">Use AI power to enhance and improve your writing performance – while retaining your individuality.</p>
-                            <div class="button-group">
-                                <a class="btn btn-primary me-2 signup-btn" th:href="@{/login}">Sign up It's free →</a>
-                                <button class="btn btn-outline-secondary google-btn">
-                                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" class="me-2">
-                                    Sign up with google
-                                </button>
-                            </div>
-                            <p class="terms-text mt-3">By signing up, you agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>.</p>
-                        </div>
-                    </div>
+        </div>
+    </nav>
 
-                    <!-- Right Box: Image -->
-                    <div class="col-md-6">
-                        <div class="bg-light p-4 h-100 rounded-3 d-flex justify-content-center align-items-center">
-                            <img th:src="@{/images/header.png}" alt="Header Illustration" style="max-height: 500px; width: auto;" />
+    <!-- Authenticated Header -->
+    <header class="py-5 bg-light">
+        <div class="container px-lg-5">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <div class="custom-auth-box">
+                        <h1 class="headline">Welcome back! 👋</h1>
+                        <p class="description">
+                            Continue enhancing your writing with our AI-powered tools.
+                            Your workspace is ready for your next masterpiece.
+                        </p>
+                        <div class="button-group">
+                            <a class="btn signup-btn" th:href="@{/paraphraser}">
+                                <i class="bi bi-arrow-right me-2"></i> Go to Workspace
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
-        <!-- Page Content-->
-        <section class="pt-4">
-            <div class="container px-lg-5">
-                <!-- Page Features -->
-                <div class="row gx-lg-5">
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/login" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Paraphraser</h2>
-                                    <p class="mb-0">Rewrite your sentences to improve clarity and originality.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/login" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100 ">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Grammar checker</h2>
-                                    <p class="mb-0">Detect and correct grammar mistakes instantly.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/login" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Summarization</h2>
-                                    <p class="mb-0">Condense long texts into concise summaries.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-5 d-flex justify-content-center">
-                        <a href="/login" class="text-decoration-none text-dark w-75">
-                            <div class="card bg-light border-0 h-100">
-                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h2 class="fs-4 fw-bold">Toolkits</h2>
-                                    <p class="mb-0">Use toolkits to make everyday tasks faster, easier, and more effective.</p>
-                                </div>
-                            </div>
-                        </a>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <img th:src="@{/images/header.png}" alt="FixNow Illustration"
+                             class="img-fluid" style="max-height: 400px;" />
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-        </footer>
+        </div>
+    </header>
+
+    <!-- Authenticated Features -->
+    <section class="py-5">
+        <div class="container px-lg-5" >
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Your Writing Tools</h2>
+                <p class="text-muted">Click on any tool to start improving your writing</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/paraphraser}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-primary bg-gradient text-white">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </div>
+                                <h3 class="feature-title">Paraphraser</h3>
+                                <p class="feature-description mb-0">
+                                    Rewrite your sentences to improve clarity and originality while maintaining meaning.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/grammar_checker}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-success bg-gradient text-white">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <h3 class="feature-title">Grammar Checker</h3>
+                                <p class="feature-description mb-0">
+                                    Detect and correct grammar mistakes instantly with AI-powered analysis.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/summarizer}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-info bg-gradient text-white">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <h3 class="feature-title">Summarizer</h3>
+                                <p class="feature-description mb-0">
+                                    Condense long texts into concise summaries while preserving key information.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/toolkits}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="premium-badge">Premium</div>
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-warning bg-gradient text-white">
+                                    <i class="bi bi-tools"></i>
+                                </div>
+                                <h3 class="feature-title">Professional Toolkits</h3>
+                                <p class="feature-description mb-0">
+                                    Access email assistant, CV generator, and other professional writing tools.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Anonymous User View -->
+<div sec:authorize="isAnonymous()">
+    <nav class="navbar navbar-expand-lg py-3 sticky-top">
+        <div class="container">
+            <a class="navbar-brand me-4" th:href="@{/}">
+                <img th:src="@{/images/big_logo.jpg}" alt="FixNow Logo" width="100" height="100" />
+            </a>
+
+            <!-- Left-aligned navigation -->
+            <div class="d-flex align-items-center">
+                <div class="dropdown me-3">
+                    <a class="btn btn-link dropdown-toggle text-dark text-decoration-none fw-semibold"
+                       href="#" id="featuresDropdownAnon" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-grid-3x3-gap me-1"></i> Features
+                    </a>
+                    <div class="dropdown-menu p-3" aria-labelledby="featuresDropdownAnon" style="min-width: 500px;">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <h6 class="dropdown-header">Free Tools</h6>
+                                <a class="dropdown-item" th:href="@{/paraphraser}">
+                                    <i class="bi bi-arrow-repeat me-2 text-primary"></i> Paraphraser
+                                </a>
+                                <a class="dropdown-item" th:href="@{/grammarchecker}">
+                                    <i class="bi bi-check-circle me-2 text-success"></i> Grammar Checker
+                                </a>
+                                <a class="dropdown-item" th:href="@{/summarizer}">
+                                    <i class="bi bi-file-text me-2 text-info"></i> Summarizer
+                                </a>
+                                <a class="dropdown-item" th:href="@{/translate}">
+                                    <i class="bi bi-translate me-2 text-warning"></i> Auto Translate
+                                </a>
+                            </div>
+                            <div class="col-6 border-start ps-3">
+                                <h6 class="dropdown-header">Premium Tools</h6>
+                                <a class="dropdown-item" th:href="@{/email-assistant}">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-envelope me-2 text-warning"></i>
+                                        <span>Email Assistant</span>
+                                    </div>
+                                    <span class="badge bg-warning text-dark mt-1">Premium</span>
+                                </a>
+                                <a class="dropdown-item" th:href="@{/cv-generator}">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person-vcard me-2 text-warning"></i>
+                                        <span>CV Generator</span>
+                                    </div>
+                                    <span class="badge bg-warning text-dark mt-1">Premium</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="me-4">
+                    <a class="btn btn-link text-dark text-decoration-none fw-semibold" th:href="@{/pricing}">
+                        <i class="bi bi-tag me-1"></i> Pricing
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile toggle -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAnon">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <!-- Right-aligned navigation -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNavAnon">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link me-3" href="#contact">
+                            <i class="bi me-1"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-login me-2" th:href="@{/login}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-signup" th:href="@{/register}">
+                            <i class="bi bi-person-plus me-1"></i> Sign Up
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Anonymous Header -->
+    <header class="py-5 bg-light">
+        <div class="container px-lg-5">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <div class="custom-auth-box">
+                        <h1 class="headline">"Viết hay hơn theo phong cách của bạn"</h1>
+                        <p class="description">
+                            Use AI power to enhance and improve your writing performance –
+                            while retaining your individuality.
+                        </p>
+                        <div class="button-group d-flex flex-column flex-sm-row gap-3">
+                            <a class="btn signup-btn" th:href="@{/register}">
+                                <i class="bi bi-arrow-right me-2"></i> Sign up - It's free
+                            </a>
+                            <button class="btn google-btn" onclick="signUpWithGoogle()">
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                     alt="Google" width="20" class="me-2">
+                                Sign up with Google
+                            </button>
+                        </div>
+                        <p class="terms-text mt-3">
+                            By signing up, you agree to our
+                            <a th:href="@{/terms}">Terms and Conditions</a> and
+                            <a th:href="@{/privacy}">Privacy Policy</a>.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <img th:src="@{/images/header.png}" alt="FixNow Illustration"
+                             class="img-fluid" style="max-height: 400px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Anonymous Features -->
+    <section class="py-5">
+        <div class="container px-lg-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Powerful Writing Tools</h2>
+                <p class="text-muted">Sign up to access all features and start improving your writing today</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/login}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-primary bg-gradient text-white">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </div>
+                                <h3 class="feature-title">Paraphraser</h3>
+                                <p class="feature-description mb-0">
+                                    Rewrite your sentences to improve clarity and originality.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/login}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-success bg-gradient text-white">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <h3 class="feature-title">Grammar Checker</h3>
+                                <p class="feature-description mb-0">
+                                    Detect and correct grammar mistakes instantly.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/login}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-info bg-gradient text-white">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <h3 class="feature-title">Summarizer</h3>
+                                <p class="feature-description mb-0">
+                                    Condense long texts into concise summaries.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-6 col-md-6">
+                    <a th:href="@{/login}" class="text-decoration-none">
+                        <div class="card feature-card">
+                            <div class="premium-badge">Premium</div>
+                            <div class="card-body text-center p-4">
+                                <div class="feature bg-warning bg-gradient text-white">
+                                    <i class="bi bi-tools"></i>
+                                </div>
+                                <h3 class="feature-title">Professional Toolkits</h3>
+                                <p class="feature-description mb-0">
+                                    Use toolkits to make everyday tasks faster and more effective.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modern Footer -->
+<footer class="footer-modern">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-section">
+                    <h5>
+                        <img th:src="@{/images/light-logo.png}" alt="FixNow" style="height: 30px;" class="me-2">
+                        FixNow
+                    </h5>
+                    <p class="text-muted mb-4">
+                        AI-powered writing assistant that helps you create perfect content with
+                        advanced grammar checking, paraphrasing, and professional writing tools.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61576890197574" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Tools</h5>
+                    <a th:href="@{/paraphraser}" class="footer-link">Paraphraser</a>
+                    <a th:href="@{/grammar_checker}" class="footer-link">Grammar Checker</a>
+                    <a th:href="@{/summarizer}" class="footer-link">Summarizer</a>
+                    <a th:href="@{/translate}" class="footer-link">Auto Translate</a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Premium</h5>
+                    <a href="/email_writing_assistant" class="footer-link">Email Assistant</a>
+                    <a href="/under_development_process" class="footer-link">CV Generator</a>
+                    <a th:href="@{/pricing}" class="footer-link">Pricing</a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Company</h5>
+                    <a th:href="@{/about}" class="footer-link">About Us</a>
+                    <a th:href="@{/contact}" class="footer-link">Contact</a>
+                    <a th:href="@{/blog}" class="footer-link">Blog</a>
+                    <a th:href="@{/careers}" class="footer-link">Careers</a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Support</h5>
+                    <a th:href="@{/help}" class="footer-link">Help Center</a>
+                    <a th:href="@{/terms}" class="footer-link">Terms of Service</a>
+                    <a th:href="@{/privacy}" class="footer-link">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4 border-secondary">
+
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-muted">
+                    © <span th:text="${#dates.year(#dates.createNow())}">2024</span> FixNow. All rights reserved.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="mb-0 text-muted">
+                    Made with <i>love</i> for better writing
+                </p>
+            </div>
+        </div>
     </div>
+</footer>
 
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script th:src="@{/js/scripts.js}"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JS -->
+<script th:src="@{/js/scripts.js}"></script>
+
+<script>
+    // Google Sign Up function
+    function signUpWithGoogle() {
+        // Implement Google OAuth integration
+        console.log('Google Sign Up clicked');
+        // You can integrate with Google OAuth API here
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add loading states to buttons
+
+
+</script>
 </body>
-</html> 
+</html>

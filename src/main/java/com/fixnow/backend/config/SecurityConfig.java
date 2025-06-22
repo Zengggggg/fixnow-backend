@@ -28,6 +28,8 @@ public class SecurityConfig {
     }
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private CustomFailureHandler customAuthFailureHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
@@ -58,7 +60,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/login", "/doLogin", "/register", "/doRegister",
-                                "/css/**", "/js/**", "/images/**", "/client/**","/"
+                                "/css/**", "/js/**", "/images/**", "/client/**","/",
+                                "/verify","/verify-notice","/resend-verification"
                         ).permitAll()
                         .requestMatchers(
                                 "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",
@@ -73,7 +76,7 @@ public class SecurityConfig {
                         .usernameParameter("email")  // Dùng "email" thay vì "username"
                         .passwordParameter("password")
                         .defaultSuccessUrl("/paraphraser", true) // Sau khi login thành công thì vào /
-                        .failureUrl("/login?error")
+                        .failureHandler(customAuthFailureHandler) // 👈 DÙNG BEAN THỰC TẾ
                         .permitAll()
                 )
                 .rememberMe(remember -> remember
