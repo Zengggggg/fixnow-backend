@@ -222,7 +222,10 @@
                     <div class="col-md-6 mb-3">
                         <textarea id="outputText" style="background-color: white;" class="form-control" rows="9" placeholder="Summarized text will appear here..." readonly></textarea>
                         <div class="d-flex justify-content-end mt-2">
-                            <button class="btn btn-primary" onclick="summarizeText()">Summarize</button>
+                            <button id="summarizeBtn" class="btn btn-primary" onclick="summarizeText()">
+                                <span id="summarizeBtnText">Summarize</span>
+                                <span id="summarizeBtnSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -309,10 +312,21 @@
         const lengthValue = document.getElementById('lengthSlider').value;
         const format = getSelectedFormat(); // 'normal' hoặc 'bullet'
 
+        const btn = document.getElementById('summarizeBtn');
+        const btnText = document.getElementById('summarizeBtnText');
+        const btnSpinner = document.getElementById('summarizeBtnSpinner');
+        const outputText = document.getElementById('outputText');
+
         if (inputText.length === 0) {
             alert("Please enter some text to summarize.");
             return;
         }
+
+        // Hiển thị loading
+        btn.disabled = true;
+        btnText.textContent = "Summarizing...";
+        btnSpinner.style.display = "inline-block";
+        outputText.value = "";
 
         fetch('/summarize', {
             method: 'POST',
@@ -327,14 +341,20 @@
         })
             .then(res => res.json())
             .then(data => {
-                // console.log("DATA RECEIVED FROM SERVER:", data);
-                document.getElementById('outputText').value = data.summarizedText;
+                outputText.value = data.summarizedText || "No summary received.";
             })
             .catch(err => {
                 console.error('Summarization error:', err);
-                alert("Summarization failed.");
+                outputText.value = "Summarization failed.";
+            })
+            .finally(() => {
+                // Ẩn loading
+                btn.disabled = false;
+                btnText.textContent = "Summarize";
+                btnSpinner.style.display = "none";
             });
     }
+
     document.addEventListener('DOMContentLoaded', function () {
         const inputBox = document.getElementById('inputText');
         const outputBox = document.getElementById('outputText');

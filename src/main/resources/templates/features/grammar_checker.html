@@ -359,11 +359,21 @@
             <div class="spellcheck-box">
                 <h3 class="fs-12" style="color:#635bff;">SPELL CHECK</h3>
                 <hr>
-                <p>Click on any word below to replace it with the suggested correction.</p>
-                <ul id="error-list">
-                    <!-- Các lỗi chính tả sẽ được thêm ở đây -->
-                </ul>
+
+                <!-- Loading spinner -->
+                <div id="spellcheck-loading" style="display: none; text-align: center;">
+                    <div class="spinner-border text-primary" role="status" style="width: 1.5rem; height: 1.5rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Checking grammar...</p>
+                </div>
+
+                <!-- Dòng chữ này sẽ được ẩn khi loading -->
+                <p id="spellcheck-note">Click on any word below to replace it with the suggested correction.</p>
+
+                <ul id="error-list"></ul>
             </div>
+
         </div>
 
     </div>
@@ -432,69 +442,76 @@
     // 5. Kiểm tra lỗi
     async function checkGrammar() {
         const plainText = quill.getText();
-
-        const res = await fetch('/grammar_check', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ text: plainText })
-        });
-
-        const data = await res.json();
-        const errors = data.errors || [];
-
-        // Xóa highlight cũ
-        quill.formatText(0, quill.getLength(), {
-            'highlight-spelling': false,
-            'highlight-grammar': false
-        });
-
-        // Highlight lỗi mới
-        errors.forEach(err => {
-            const attr = err.type === 'spelling'
-                ? { 'highlight-spelling': true }
-                : { 'highlight-grammar': true };
-
-            quill.formatText(err.start, err.end - err.start, attr);
-        });
-
-        // Cập nhật danh sách gợi ý
+        const loadingBox = document.getElementById('spellcheck-loading');
         const errorList = document.getElementById('error-list');
-        errorList.innerHTML = '';
+        const note = document.getElementById('spellcheck-note');
 
-        let offset = 0;
-        errors.forEach(err => {
-            const li = document.createElement('li');
-            const originalText = plainText.substring(err.start, err.end);
-            li.innerHTML = `(`+err.type+`) <span class="suggestion">`+originalText+`</span> → <strong>`+err.suggestion+`</strong>`;
-            li.style.cursor = 'pointer';
+        // Bắt đầu loading
+        loadingBox.style.display = 'block';
+        note.style.display = 'none';         // ẩn dòng chú thích
+        errorList.style.display = 'none';    // ẩn danh sách lỗi
+        errorList.innerHTML = '';            // reset danh sách lỗi
 
-            li.onclick = () => {
-                const adjustedStart = err.start + offset;
-                const adjustedEnd = err.end + offset;
-                const lengthDiff = err.suggestion.length - (adjustedEnd - adjustedStart);
+        try {
+            const res = await fetch('/grammar_check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: plainText })
+            });
 
-                // Thay thế lỗi bằng suggestion
-                quill.deleteText(adjustedStart, adjustedEnd - adjustedStart);
-                quill.insertText(adjustedStart, err.suggestion);
+            const data = await res.json();
+            const errors = data.errors || [];
 
-                // Xóa highlight lỗi sau khi sửa
+            quill.formatText(0, quill.getLength(), {
+                'highlight-spelling': false,
+                'highlight-grammar': false
+            });
+
+            errors.forEach(err => {
                 const attr = err.type === 'spelling'
-                    ? { 'highlight-spelling': false }
-                    : { 'highlight-grammar': false };
-                quill.formatText(adjustedStart, err.suggestion.length, attr);
+                    ? { 'highlight-spelling': true }
+                    : { 'highlight-grammar': true };
+                quill.formatText(err.start, err.end - err.start, attr);
+            });
 
-                // Cập nhật offset
-                offset += lengthDiff;
+            let offset = 0;
+            errors.forEach(err => {
+                const li = document.createElement('li');
+                const originalText = plainText.substring(err.start, err.end);
+                li.innerHTML = `(${err.type}) <span class="suggestion">${originalText}</span> → <strong>${err.suggestion}</strong>`;
+                li.style.cursor = 'pointer';
 
-                // Xóa dòng lỗi khỏi danh sách
-                li.remove();
-            };
+                li.onclick = () => {
+                    const adjustedStart = err.start + offset;
+                    const adjustedEnd = err.end + offset;
+                    const lengthDiff = err.suggestion.length - (adjustedEnd - adjustedStart);
 
-            errorList.appendChild(li);
-        });
+                    quill.deleteText(adjustedStart, adjustedEnd - adjustedStart);
+                    quill.insertText(adjustedStart, err.suggestion);
+
+                    const attr = err.type === 'spelling'
+                        ? { 'highlight-spelling': false }
+                        : { 'highlight-grammar': false };
+                    quill.formatText(adjustedStart, err.suggestion.length, attr);
+
+                    offset += lengthDiff;
+                    li.remove();
+                };
+
+                errorList.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Grammar check failed.');
+        } finally {
+            loadingBox.style.display = 'none';
+            errorList.style.display = 'block';
+            note.style.display = 'block'; // hiện lại dòng chú thích
+        }
     }
+
+
 </script>
 
 

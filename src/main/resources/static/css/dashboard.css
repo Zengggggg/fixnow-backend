@@ -17014,6 +17014,26 @@ input:-moz-placeholder {
     padding-top: 20px;
 }
 
+.dropdown-button {
+    background-color: #f0f0ff;
+    border: 1px solid #635bff;
+    color: #635bff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+    appearance: none;         /* ẩn mũi tên mặc định trên Chrome */
+    -webkit-appearance: none; /* ẩn mũi tên trên Safari */
+    -moz-appearance: none;    /* ẩn mũi tên trên Firefox */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23635bff' d='M5.516 7.548l4.484 4.481 4.484-4.481L16 9.061 10 15 4 9.061z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 40px; /* dư chỗ cho icon */
+}
+
+
 .translate-top button{
     background-color: #f0f0ff;
     border: 1px solid #635bff;

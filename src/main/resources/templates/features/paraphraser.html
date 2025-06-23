@@ -220,7 +220,10 @@
                     <div class="col-md-6 mb-3">
                         <textarea id="outputText" style="background-color: white;" class="form-control" rows="10" placeholder="Paraphrased text will appear here..." readonly></textarea>
                         <div class="d-flex justify-content-end mt-2">
-                            <button class="btn btn-primary" onclick="paraphraseText()">Paraphrase</button>
+                            <button id="paraphraseBtn" class="btn btn-primary" onclick="paraphraseText()">
+                                <span id="btnText">Paraphrase</span>
+                                <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true" style="display: none;"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -240,6 +243,12 @@
 <script>
     function paraphraseText() {
         const inputText = document.getElementById('inputText').value.trim();
+        const outputText = document.getElementById('outputText');
+        const btn = document.getElementById('paraphraseBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const language = document.getElementById('languageSelector').value;
+
         const wordCount = inputText.split(/\s+/).filter(w => w.length > 0).length;
 
         if (wordCount > 125) {
@@ -253,23 +262,40 @@
             return;
         }
 
-        // Gửi request nếu chưa vượt giới hạn
+        // Hiển thị hiệu ứng loading
+        btn.disabled = true;
+        btnText.textContent = "Processing...";
+        btnSpinner.style.display = "inline-block";
+        outputText.value = "";
+
+        // Gửi request
         fetch('/paraphrase', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ text: inputText })
+            body: JSON.stringify({
+                text: inputText,
+                language: language
+            })
         })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('outputText').value = data.paraphrasedText;
+                outputText.value = data.paraphrasedText;
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Paraphrasing failed.');
+            })
+            .finally(() => {
+                // Ẩn hiệu ứng loading
+                btn.disabled = false;
+                btnText.textContent = "Paraphrase";
+                btnSpinner.style.display = "none";
             });
     }
+
+
 </script>
 <script>
     const inputTextArea = document.getElementById('inputText');

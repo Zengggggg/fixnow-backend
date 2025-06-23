@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="utf-8">
@@ -193,27 +193,26 @@
             <div class="translate-top">
                 <button id="detect-btn">
                     <span class="iconify" data-icon="mdi:earth" data-inline="false"></span>
-                    Detect language
+                    <span id="detect-label">Detect language</span>
                 </button>
                 <button id="switch-btn" class="switch-button d-flex align-items-center justify-content-center">
                     <span class="iconify" data-icon="mdi:swap-horizontal" data-inline="false" ></span>
                 </button>
                 <label for="target-lang-select" style="display: flex; align-items: center; gap: 6px;">
-                    <span class="iconify" data-icon="mdi:translate" data-inline="false"></span>
-                    <select id="target-lang-select" class="dropdown-button">
-                        <option value="en">English</option>
-                        <option value="vi" selected>Vietnamese</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                        <option value="ja">Japanese</option>
-                    </select>
+                        <select id="target-lang-select" class="dropdown-button" >
+                            <option value="en">English</option>
+                            <option value="vi" selected>Vietnamese</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="ja">Japanese</option>
+                        </select>
                 </label>
 
             </div>
 
             <div class="translate-content">
                 <div class="translate-box">
-                    <textarea placeholder="Enter text here..." class="input-area"></textarea>
+                    <textarea id="input-text" placeholder="Enter text here..." class="input-area"></textarea>
                 </div>
                 <div class="translate-box">
               <textarea
@@ -226,11 +225,13 @@
             </div>
 
             <div class="translate-action">
-                <button>
+                <button id="translateBtn">
                     <span class="iconify" data-icon="mdi:arrow-right" style="font-size: 24px; vertical-align: middle; margin-right: 8px;"></span>
-                    Translate
+                    <span id="translateBtnText">Translate</span>
+                    <span id="translateBtnSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
                 </button>
             </div>
+
 
             <!-- </div> -->
         </div>
@@ -249,33 +250,101 @@
         const sourceText = document.querySelector(".input-area").value.trim();
         const targetLang = document.getElementById("target-lang-select").value;
         const outputArea = document.querySelector('.output-area');
-
         const inputArea = document.querySelector('.input-area');
 
+        // Loading elements
+        const btn = document.getElementById("translateBtn");
+        const btnText = document.getElementById("translateBtnText");
+        const btnSpinner = document.getElementById("translateBtnSpinner");
+
+        // Xóa output khi input trống
         inputArea.addEventListener('input', () => {
             if (inputArea.value.trim() === '') {
                 outputArea.value = '';
             }
         });
 
-
-
         if (!sourceText) {
             alert("Please enter text to translate.");
             return;
         }
 
-        const response = await fetch("/translation", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ text: sourceText, targetLang: targetLang })
-        });
+        // Hiện loading
+        btn.disabled = true;
+        btnText.textContent = "Translating...";
+        btnSpinner.style.display = "inline-block";
+        outputArea.value = "";
 
-        const data = await response.json();
-        document.querySelector(".output-area").value = data.translation || "Translation failed.";
+        try {
+            const response = await fetch("/translation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: sourceText, targetLang: targetLang })
+            });
+
+            const data = await response.json();
+            outputArea.value = data.translation || "Translation failed.";
+        } catch (error) {
+            console.error("Error:", error);
+            outputArea.value = "Translation failed.";
+        } finally {
+            // Dừng loading khi có kết quả
+            btn.disabled = false;
+            btnText.textContent = "Translate";
+            btnSpinner.style.display = "none";
+        }
     });
+
+
+</script>
+<script>
+    const input = document.getElementById('input-text');
+    const detectLabel = document.getElementById('detect-label');
+    let detectTimeout;
+
+    input.addEventListener('input', () => {
+        clearTimeout(detectTimeout); // chống spam request
+        const text = input.value.trim();
+
+        if (text.length < 5) {
+            detectLabel.textContent = "Detect language";
+            return;
+        }
+
+        // Đợi người dùng ngưng gõ 500ms mới gọi
+        detectTimeout = setTimeout(async () => {
+            try {
+                const res = await fetch('/detect-language', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+
+                const data = await res.json();
+                detectLabel.textContent = getLanguageLabel(data.language); // Ví dụ: 'en' -> 🇺🇸 English
+            } catch (e) {
+                console.error("Language detection failed", e);
+                detectLabel.textContent = "Detect language";
+            }
+        }, 400);
+    });
+
+    // Map mã → tên + cờ
+    function getLanguageLabel(code) {
+        const map = {
+            en: '🇺🇸 English',
+            vi: '🇻🇳 Vietnamese',
+            fr: '🇫🇷 French',
+            de: '🇩🇪 German',
+            ja: '🇯🇵 Japanese',
+            zh: '🇨🇳 Chinese',
+            es: '🇪🇸 Spanish'
+            // thêm nếu cần
+        };
+        return map[code] || `${code}`;
+    }
 
 </script>
 

@@ -1,5 +1,6 @@
 package com.fixnow.backend.services.impl;
 
+import com.fixnow.backend.dtos.request.ParaphraseRequest;
 import com.fixnow.backend.services.ParaphraseService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +22,12 @@ public class ParaphraseServiceImpl implements ParaphraseService {
     private final WebClient webClient = WebClient.builder().build();
 
     @Override
-    public String paraphrase(String inputText) {
+    public String paraphrase(ParaphraseRequest request) {
         Map<String, Object> body = Map.of(
                 "model", "gpt-4",
                 "messages", List.of(
                         Map.of("role", "system", "content", "You are a helpful assistant that paraphrases English text."),
-                        Map.of("role", "user", "content", "Paraphrase this: " + inputText)
+                        Map.of("role", "user", "content", buildPrompt(request))
                 )
         );
 
@@ -61,4 +62,15 @@ public class ParaphraseServiceImpl implements ParaphraseService {
         }
 
     }
+
+    private String buildPrompt(ParaphraseRequest req) {
+        return String.format("""
+        Paraphrase the following text in %s.
+        Make the output natural, fluent, and easy to understand while preserving the original meaning.
+        
+        Text:
+        %s
+        """, req.getLanguage(), req.getText());
+    }
+
 }

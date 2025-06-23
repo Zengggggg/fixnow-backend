@@ -21,8 +21,8 @@ public class ParaphraseController {
 
     @PostMapping("/paraphrase")
     public ResponseEntity<ParaphraseResponse> paraphrase(@RequestBody ParaphraseRequest request) {
-        String originalText = request.getText();
-        String paraphrased = paraphraseService.paraphrase(originalText);
+
+        String paraphrased = paraphraseService.paraphrase(request);
 
         ParaphraseResponse response = new ParaphraseResponse(paraphrased);
         return ResponseEntity.ok(response);

@@ -30,7 +30,7 @@ public class TranslationServiceImpl implements TranslationService {
 
     public String translate(String sourceText, String targetLanguage) {
         try {
-            String prompt = String.format("Translate the following text to %s: \"%s\"", targetLanguage, sourceText);
+            String prompt = String.format("Translate the following text to %s:\n%s", targetLanguage, sourceText);
 
             Map<String, Object> requestBody = Map.of(
                     "model", "gpt-4",

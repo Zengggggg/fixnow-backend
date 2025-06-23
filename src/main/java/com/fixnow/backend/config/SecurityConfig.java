@@ -5,6 +5,7 @@ import com.fixnow.backend.services.CustomUserDetailsService;
 import com.fixnow.backend.services.UserService;
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +31,8 @@ public class SecurityConfig {
     private UserDetailsService userDetailsService;
     @Autowired
     private CustomFailureHandler customAuthFailureHandler;
+    @Value("${jwt.secret}")
+    private String secret;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
@@ -80,15 +83,19 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .rememberMe(remember -> remember
-                        .key("secure-remember-key") // Chuỗi bất kỳ, nên ngẫu nhiên
-                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 ngày
+                        .key(secret) // Chuỗi bất kỳ, nên ngẫu nhiên
+                        .tokenValiditySeconds(3 * 24 * 60 * 60) // 7 ngày
                         .userDetailsService(userDetailsService) // bạn cần có bean này
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID", "remember-me")
                         .permitAll()
                 );
+
         return http.build();
     }
 } 
