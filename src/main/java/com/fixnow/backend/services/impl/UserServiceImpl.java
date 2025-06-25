@@ -76,6 +76,19 @@ public class UserServiceImpl implements UserService {
 
         return mapUserToResponseDto(savedUser);
     }
+
+    @Override
+    public void updatePassword(String email, String rawPassword) {
+        User user = userRepository.findByEmail(email).get();
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)

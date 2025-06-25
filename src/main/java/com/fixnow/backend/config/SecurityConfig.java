@@ -64,7 +64,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/login", "/doLogin", "/register", "/doRegister",
                                 "/css/**", "/js/**", "/images/**", "/client/**","/",
-                                "/verify","/verify-notice","/resend-verification"
+                                "/verify","/verify-notice","/resend-verification","/do-forgot-password",
+                                "/forgot-password","/reset-password","/resend-otp"
                         ).permitAll()
                         .requestMatchers(
                                 "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",

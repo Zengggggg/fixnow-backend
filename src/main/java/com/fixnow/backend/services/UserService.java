@@ -18,4 +18,7 @@ public interface UserService {
 //    String loginWithGoogle(String idToken) throws GeneralSecurityException, IOException;
 
     User findById(Long id);
+    void updatePassword(String email, String rawPassword);
+    boolean existsByEmail(String email);
+
 }
