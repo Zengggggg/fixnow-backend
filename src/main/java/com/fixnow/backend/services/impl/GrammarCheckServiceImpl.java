@@ -58,39 +58,41 @@ public class GrammarCheckServiceImpl implements GrammarCheckService {
     }
     private String buildPrompt(String input) {
         return """
-        You are a grammar and spelling checker.
+        You are a multilingual grammar and spelling checker.
     
-        Given the following English text, identify all grammar and spelling errors.
-    
-        For each error, return a JSON object with:
+        Detect all grammar and spelling mistakes in the following input text (regardless of language). 
+        For each mistake, return a JSON object with:
         - error: the incorrect word or phrase.
         - type: either "spelling" or "grammar".
-        - suggestion: the corrected word or phrase.
+        - suggestion: the corrected version.
     
-        Return only a JSON array, no explanation.
+        Only return a JSON array, no explanation, no extra text.
     
         Text: "%s"
         """.formatted(input);
     }
 
+
     private List<GrammarError> parseAndEnrichErrors(String input, String response) {
         try {
-            // Parse JSON string from GPT response
             JsonNode root = objectMapper.readTree(response);
             String content = root.path("choices").get(0).path("message").path("content").asText();
 
-            // Parse list of GrammarError objects
             List<GrammarError> errors = objectMapper.readValue(content, new TypeReference<>() {});
 
-            // Enrich with start/end index
+            // Dùng để tránh trùng vị trí khi có nhiều từ giống nhau
+            int currentSearchIndex = 0;
+
             for (GrammarError err : errors) {
                 String errorText = err.getError();
-                int index = input.indexOf(errorText);
 
-                // Tìm vị trí đầu tiên (cơ bản)
+                // Tìm vị trí tiếp theo của errorText, từ vị trí chưa match
+                int index = input.indexOf(errorText, currentSearchIndex);
+
                 if (index >= 0) {
                     err.setStart(index);
                     err.setEnd(index + errorText.length());
+                    currentSearchIndex = index + errorText.length(); // Cập nhật để tránh duplicate
                 } else {
                     err.setStart(-1);
                     err.setEnd(-1);
@@ -103,4 +105,5 @@ public class GrammarCheckServiceImpl implements GrammarCheckService {
             return List.of();
         }
     }
+
 }
