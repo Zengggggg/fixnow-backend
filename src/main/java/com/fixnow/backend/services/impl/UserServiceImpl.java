@@ -5,10 +5,12 @@ import com.fixnow.backend.dtos.response.UserResponseDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
 import com.fixnow.backend.models.Role;
 import com.fixnow.backend.models.User;
+import com.fixnow.backend.models.UserWallet;
 import com.fixnow.backend.models.VerificationToken;
 import com.fixnow.backend.mun.Provider;
 import com.fixnow.backend.repositories.RoleRepository;
 import com.fixnow.backend.repositories.UserRepository;
+import com.fixnow.backend.repositories.UserWalletRepository;
 import com.fixnow.backend.repositories.VerificationTokenRepository;
 import com.fixnow.backend.services.EmailVerifyService;
 import com.fixnow.backend.services.UserService;
@@ -53,6 +55,8 @@ public class UserServiceImpl implements UserService {
         Role freemiumRole = roleRepository.findByName("ROLE_FREE")
                 .orElseThrow(() -> new IllegalStateException("Default role ROLE_FREE not found"));;
         User newUser = new User();
+        UserWallet wallet = new UserWallet();
+
         newUser.setUsername(registrationDto.getUsername());
         newUser.setFirstName(registrationDto.getFirstName());
         newUser.setLastName(registrationDto.getLastName());

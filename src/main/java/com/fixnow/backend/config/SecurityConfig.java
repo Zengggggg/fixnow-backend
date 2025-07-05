@@ -66,7 +66,7 @@ public class SecurityConfig {
                                 "/css/**", "/js/**", "/images/**", "/client/**","/",
                                 "/verify","/verify-notice","/resend-verification","/do-forgot-password",
                                 "/forgot-password","/reset-password","/resend-otp","/term-and-service",
-                                "/policy"
+                                "/policy","/contact"
                         ).permitAll()
                         .requestMatchers(
                                 "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",

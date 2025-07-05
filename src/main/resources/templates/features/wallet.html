@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ví từ</title>
+</head>
+<body>
+
+<h2>Thông tin ví</h2>
+<p>Số dư: <span th:text="${wallet.balance}">0</span> VNĐ</p>
+<p>Số từ còn lại: <span th:text="${wallet.wordQuota}">0</span> từ</p>
+
+<h3>Mua thêm từ</h3>
+<form th:action="@{/wallet/purchase}" method="post">
+    <label for="words">Chọn gói từ:</label>
+    <select name="words" id="words">
+        <option value="1000" data-cost="5000">1.000 từ - 5.000đ</option>
+        <option value="5000" data-cost="20000">5.000 từ - 20.000đ</option>
+        <option value="10000" data-cost="35000">10.000 từ - 35.000đ</option>
+    </select>
+    <input type="hidden" name="cost" id="costInput" value="5000"/>
+    <button type="submit">Mua ngay</button>
+</form>
+
+<p th:if="${success}" th:text="${success}" style="color:green;"></p>
+<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+<script>
+    const select = document.getElementById("words");
+    const costInput = document.getElementById("costInput");
+    select.addEventListener("change", function () {
+        const cost = this.options[this.selectedIndex].getAttribute("data-cost");
+        costInput.value = cost;
+    });
+</script>
+
+</body>
+</html>

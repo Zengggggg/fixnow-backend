@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixnow - Contact Us</title>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link th:href="@{css/contact_us.css}" rel="stylesheet" />
+    <!-- Notyf CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <!-- Notyf JS -->
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-container">
+        <a class="navbar-brand me-4" th:href="@{/}">
+            <img th:src="@{images/logo.png}" alt="FixNow Logo" width="100" height="100" />
+        </a>
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about_us">About us</a></li>
+            <li><a href="/term-and-service">Service</a></li>
+            <li><a href="/policy" class="active">Term of use</a></li>
+        </ul>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+</nav>
+<header>
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn</p>
+    </div>
+</header>
+
+<main class="contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <h2>Thông Tin Liên Hệ</h2>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <iconify-icon icon="mdi:map-marker" width="24" height="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <h3>Địa Chỉ</h3>
+                        <p>Toà Delta (Đại học FPT) <br>high tech park, Khu Công Nghệ Cao Hòa Lạc</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <iconify-icon icon="mdi:phone" width="24" height="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <h3>Điện Thoại</h3>
+                        <p>+84 392 304 629<br>+84 830 478 863</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <iconify-icon icon="mdi:email" width="24" height="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <h3>Email</h3>
+                        <p>fixnow2025@gmail.com<br>supportfixnow@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <iconify-icon icon="mdi:clock-time-three-outline" width="24" height="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <h3>Giờ Làm Việc</h3>
+                        <p>Thứ 2 - Thứ 6: 8:00 - 17:00<br>Thứ 7: 8:00 - 12:00</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h2>Gửi Tin Nhắn</h2>
+                <div class="success-message" id="successMessage">
+                    Cảm ơn bạn! Tin nhắn của bạn đã được gửi thành công.
+                </div>
+
+                <form id="contactForm" action="#" method="POST">
+                    <input type="hidden" id="userEmail" th:value="${userEmail}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">Họ <span class="required">*</span></label>
+                            <input type="text" id="firstName" name="firstName" th:value="${first_name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Tên <span class="required">*</span></label>
+                            <input type="text" id="lastName" name="lastName" th:value="${last_name}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Chủ Đề <span class="required">*</span></label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Chọn chủ đề</option>
+                            <option value="general">Thông tin chung</option>
+                            <option value="support">Hỗ trợ kỹ thuật</option>
+                            <option value="sales">Bán hàng</option>
+                            <option value="partnership">Hợp tác</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Tin Nhắn <span class="required">*</span></label>
+                        <textarea id="message" name="message" placeholder="Nhập tin nhắn của bạn..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Gửi Tin Nhắn</button>
+                </form>
+
+            </div>
+        </div>
+
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <h2>Vị Trí Của Chúng Tôi</h2>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4351.499378248376!2d105.52275705819744!3d21.013600095893697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31345b4294f9b71f%3A0xa6159406faced446!2zVG_DoCBEZWx0YSAoxJDhuqFpIGjhu41jIEZQVCk!5e0!3m2!1svi!2s!4v1751699552459!5m2!1svi!2s" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" title="Bản đồ địa chỉ văn phòng"></iframe>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    const notyf = new Notyf({
+        duration: 3000,
+        position: { x: 'right', y: 'top' }
+    });
+
+    document.getElementById("contactForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const firstName = document.getElementById("firstName").value.trim();
+        const lastName = document.getElementById("lastName").value.trim();
+        const subject = document.getElementById("subject").value.trim();
+        const message = document.getElementById("message").value.trim();
+        const userEmail = document.getElementById("userEmail").value.trim();
+
+        if (!firstName || !lastName || !subject || !message) {
+            notyf.error("Vui lòng điền đầy đủ tất cả các trường bắt buộc.");
+            return;
+        }
+
+        const fullName = firstName + " " + lastName;
+        const mailSubject = encodeURIComponent(`Liên hệ từ: ${fullName} - ${subject}`);
+        const mailBody = encodeURIComponent(
+            `Xin chào FixNow,\n\n` +
+            `Tôi tên là ${fullName}.\n` +
+            `${message}\n\n` +
+            `Trân trọng,\n${fullName}`
+        );
+
+
+        // Gmail mở trực tiếp (nếu muốn thay thế mailto:)
+        const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=fixnow2025@gmail.com&su=${mailSubject}&body=${mailBody}`;
+
+        // Dùng link mở Gmail để đảm bảo hoạt động
+        window.open(gmailLink, '_blank');
+
+        notyf.success("Đang mở Gmail để gửi email...");
+    });
+
+    // Add input validation feedback
+    const form = document.getElementById('contactForm');
+    const errorMessage = document.getElementById('error-message');
+
+    form.addEventListener('submit', function (e) {
+        const requiredFields = form.querySelectorAll('input[required], textarea[required], select[required]');
+        let hasError = false;
+
+        requiredFields.forEach(field => {
+            if (field.value.trim() === '') {
+                hasError = true;
+            }
+        });
+
+        if (hasError) {
+            e.preventDefault(); // Ngăn gửi form
+            errorMessage.style.display = 'block'; // Hiện thông báo
+        } else {
+            errorMessage.style.display = 'none'; // Ẩn thông báo nếu hợp lệ
+        }
+    });
+
+    function toggleMobileMenu() {
+        const navMenu = document.querySelector('.nav-menu');
+        navMenu.classList.toggle('active');
+    }
+
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.querySelector('.nav-menu').classList.remove('active');
+        });
+    });
+</script>
+</body>
+</html>

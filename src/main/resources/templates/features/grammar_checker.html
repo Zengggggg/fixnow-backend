@@ -183,13 +183,11 @@
                             <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
                         </svg>
                     </div>
-
-
                 </a>
-
-                <!-- <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                <!-- Sidebar close button for mobile -->
+                <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarClose" style="margin-left: 10px;">
                     <i class="ti ti-x fs-8"></i>
-                </div> -->
+                </div>
             </div>
 
 
@@ -302,6 +300,8 @@
         </div>
         <!-- End Sidebar scroll-->
     </aside>
+    <!-- Sidebar overlay for mobile -->
+    <div class="sidebar-overlay"></div>
     <!--  Sidebar End -->
     <!--  Main wrapper -->
     <div class="body-wrapper">
@@ -309,10 +309,11 @@
         <header class="app-header">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-3">
+                    <!-- Sidebar toggler for mobile -->
                     <div class="sidebar-toggler d-xl-none d-block cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-align-justified fs-8"></i>
                     </div>
-                    <h4 class="position-absolute top-10 start-50 translate-middle m-0 fw-bold" style="position: relative; top: 30px;">Grammar Checker</h4>
+                    <h4 class="position-absolute top-10 start-50 translate-middle m-0 fw-bold" style="position: relative; top: 30px;" >Grammar Checker</h4>
                 </div>
             </div>
         </header>

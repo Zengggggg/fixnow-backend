@@ -4,8 +4,10 @@ import com.fixnow.backend.dtos.request.LoginRequestDto;
 import com.fixnow.backend.dtos.request.UserRegistrationDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
 import com.fixnow.backend.models.User;
+import com.fixnow.backend.models.UserWallet;
 import com.fixnow.backend.models.VerificationToken;
 import com.fixnow.backend.repositories.UserRepository;
+import com.fixnow.backend.repositories.UserWalletRepository;
 import com.fixnow.backend.repositories.VerificationTokenRepository;
 import com.fixnow.backend.services.EmailVerifyService;
 import com.fixnow.backend.services.GoogleAuthService;
@@ -41,6 +43,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final VerificationTokenRepository tokenRepository;
     private final GoogleAuthService googleAuthService;
+    private final UserWalletRepository userWalletRepository;
 
 //    @Value("${google.client-id}")
     private String clientId = "424612164457-pmskbghvkdihh8lcs63odsb17bhukfs5.apps.googleusercontent.com";
@@ -90,8 +93,18 @@ public class AuthController {
         }
 
         User user = vt.getUser();
-        user.setEnabled(true);
-        userRepository.save(user);
+        if (user.getWallet() == null) {
+            UserWallet wallet = new UserWallet();
+            wallet.setBalance(0.0); // hoặc giá trị mặc định của bạn
+            wallet.setWordQuota(0);
+            userWalletRepository.save(wallet);
+            user.setWallet(wallet);
+            user.setEnabled(true);
+
+            userRepository.save(user);
+        }
+
+
         tokenRepository.delete(vt);
 
         log.info("User {} verified successfully.", user.getUsername());
