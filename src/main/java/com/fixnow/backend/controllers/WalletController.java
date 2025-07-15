@@ -47,6 +47,7 @@ public class WalletController {
         }
 
         User user = userService.findByEmail(principal.getName());
+        model.addAttribute("user", user);
         model.addAttribute("wallet", walletService.getWallet(user));
         return "features/wallet";
     }
