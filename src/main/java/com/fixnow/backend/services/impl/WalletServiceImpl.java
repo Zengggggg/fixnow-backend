@@ -70,4 +70,37 @@ public class WalletServiceImpl implements WalletService {
         return walletRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Wallet not found"));
     }
+
+    @Override
+    public void topUp(User user, double amount) {
+        UserWallet wallet = walletRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+        wallet.setBalance(wallet.getBalance() + amount);
+        walletRepository.save(wallet);
+
+        TransactionHistory history = new TransactionHistory();
+        history.setUser(user);
+        history.setType("TOPUP");
+        history.setAmountChanged(amount);
+        history.setWordsChanged(0);
+        history.setDescription("Top-up via admin confirmation");
+        history.setTimestamp(LocalDateTime.now());
+        historyRepository.save(history);
+    }
+
+    @Override
+    public int countWords(String text) {
+        if (text == null || text.trim().isEmpty()) return 0;
+
+        // Loại bỏ dấu câu, ký tự đặc biệt, giữ lại từ
+        String cleaned = text.replaceAll("[^\\p{L}\\p{Nd}]+", " ").trim();
+
+        if (cleaned.isEmpty()) return 0;
+
+        // Tách từ bằng khoảng trắng
+        String[] words = cleaned.split("\\s+");
+
+        return words.length;
+    }
 }

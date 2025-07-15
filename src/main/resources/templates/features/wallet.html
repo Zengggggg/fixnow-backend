@@ -1,37 +1,771 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
-    <title>Ví từ</title>
+    <title>Ví từ - FixNow</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quản lý ví và mua từ của bạn trên FixNow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content Styles */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .wallet-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .wallet-header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .wallet-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .wallet-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+        }
+
+        .wallet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .balance-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .balance-info h3 {
+            color: var(--gray);
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .balance-icon {
+            font-size: 3rem;
+            color: var(--success);
+            background: rgba(76, 201, 240, 0.1);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .action-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .action-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .form-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #3ab7e0;
+        }
+
+        .notification {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notification-success {
+            background: rgba(76, 201, 240, 0.1);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .notification-error {
+            background: rgba(247, 37, 133, 0.1);
+            color: #721c24;
+            border-left: 4px solid #f72585;
+        }
+
+        .notification i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .qr-image {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .modal-footer {
+            text-align: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-info {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .modal-info p {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-info strong {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .balance-display {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .balance-icon {
+                margin: 15px 0;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .user-actions {
+                margin-left: auto;
+            }
+        }
+    </style>
 </head>
 <body>
+<!-- Header -->
+<header class="main-header">
+    <div class="header-container">
+        <div class="logo">
+            <a class="navbar-brand me-4" th:href="@{/}">
+                <img th:src="@{/images/light-logo.png}" alt="FixNow Logo" style="width: 45px" />
+            </a>
+        </div>
 
-<h2>Thông tin ví</h2>
-<p>Số dư: <span th:text="${wallet.balance}">0</span> VNĐ</p>
-<p>Số từ còn lại: <span th:text="${wallet.wordQuota}">0</span> từ</p>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/term-and-service">Term of service</a>
+            <a href="#">Support</a>
+        </nav>
 
-<h3>Mua thêm từ</h3>
-<form th:action="@{/wallet/purchase}" method="post">
-    <label for="words">Chọn gói từ:</label>
-    <select name="words" id="words">
-        <option value="1000" data-cost="5000">1.000 từ - 5.000đ</option>
-        <option value="5000" data-cost="20000">5.000 từ - 20.000đ</option>
-        <option value="10000" data-cost="35000">10.000 từ - 35.000đ</option>
-    </select>
-    <input type="hidden" name="cost" id="costInput" value="5000"/>
-    <button type="submit">Mua ngay</button>
-</form>
+        <div class="user-actions">
+            <div class="user-info">
+                <div class="user-avatar">U</div>
+                <span th:text="${user.username}">User</span>
+            </div>
 
-<p th:if="${success}" th:text="${success}" style="color:green;"></p>
-<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+        </div>
+    </div>
+    <input type="hidden" id="username" th:value="${user.email}" />
 
-<script>
-    const select = document.getElementById("words");
-    const costInput = document.getElementById("costInput");
-    select.addEventListener("change", function () {
-        const cost = this.options[this.selectedIndex].getAttribute("data-cost");
-        costInput.value = cost;
+</header>
+<div class="container">
+    <div class="wallet-header">
+        <h1><i class="fas fa-wallet"></i> Ví từ - FixNow</h1>
+        <p>Quản lý tài khoản và mua gói từ của bạn</p>
+    </div>
+
+    <div class="wallet-card">
+        <div class="balance-display">
+            <div class="balance-info">
+                <h3>Số dư ví</h3>
+                <div class="balance-amount" th:text="${#numbers.formatInteger(wallet.balance, 0, 'POINT')}">0</div>
+            </div>
+            <div class="balance-icon">
+                <i class="fas fa-coins"></i>
+            </div>
+        </div>
+        <div class="balance-display">
+            <div class="balance-info">
+                <h3>Số từ</h3>
+                <div class="balance-amount" th:text="${#numbers.formatInteger(wallet.wordQuota, 0, 'POINT')}">0</div>
+            </div>
+            <div class="balance-icon">
+                <i class="fas fa-pen-nib"></i>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <div class="action-card" onclick="document.getElementById('topupForm').scrollIntoView({behavior: 'smooth'})">
+                <i class="fas fa-plus-circle"></i>
+                <h3>Nạp tiền</h3>
+                <p>Thêm tiền vào ví của bạn</p>
+            </div>
+            <div class="action-card" onclick="document.getElementById('purchaseForm').scrollIntoView({behavior: 'smooth'})">
+                <i class="fas fa-pen-nib"></i>
+                <h3>Mua từ</h3>
+                <p>Mua gói từ mới</p>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-history"></i>
+                <h3>Lịch sử</h3>
+                <p>Xem lịch sử giao dịch</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông báo -->
+    <div th:if="${success}" class="notification notification-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${success}">Thành công</span>
+        <button class="close-btn" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div th:if="${error}" class="notification notification-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${error}">Lỗi</span>
+        <button class="close-btn" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Nạp tiền -->
+    <div id="topupForm" class="form-section">
+        <h3><i class="fas fa-plus-circle"></i> Nạp tiền vào ví</h3>
+        <form id="topupForm" method="post" action="/topup">
+            <div class="form-group">
+                <label for="amount">Nhập số tiền (VNĐ):</label>
+                <div class="select-wrapper">
+                    <input type="number" name="amount" id="amount" min="10000" step="10000" required
+                           class="form-control" placeholder="Tối thiểu 10.000 VNĐ">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">
+                <i class="fas fa-qrcode"></i> Tạo mã QR nạp tiền
+            </button>
+        </form>
+    </div>
+
+    <!-- Mua từ -->
+    <div id="purchaseForm" class="form-section">
+        <h3><i class="fas fa-shopping-cart"></i> Mua thêm từ</h3>
+        <form id="purchaseForm" method="post" action="/purchase">
+            <div class="form-group">
+                <label for="words">Chọn gói từ:</label>
+                <div class="select-wrapper">
+                    <select name="words" id="words" class="form-control">
+                        <option value="1000" data-cost="50000">1.000 từ - 50.000đ (50đ/từ)</option>
+                        <option value="5000" data-cost="200000">5.000 từ - 200.000đ (40đ/từ)</option>
+                        <option value="10000" data-cost="350000">10.000 từ - 350.000đ (35đ/từ)</option>
+                        <option value="50000" data-cost="1500000">50.000 từ - 1.500.000đ (30đ/từ)</option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" id="cost" name="cost" value="50000" />
+            <div class="form-group">
+                <p>Giá gốc: <span id="originalPrice">50.000đ</span></p>
+                <p>Giảm giá: <span id="discountPrice">0đ</span></p>
+                <p class="total-price">Tổng cộng: <strong id="totalPrice">50.000đ</strong></p>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-shopping-cart"></i> Mua ngay
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal QR -->
+<div id="qrModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeQrModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-header">
+            <h3><i class="fas fa-qrcode"></i> Nạp tiền / Mua từ</h3>
+        </div>
+        <div class="modal-body">
+            <img id="qrImage" src="" alt="QR VietQR" class="qr-image">
+            <div class="modal-info">
+                <p><strong>Số tiền:</strong> <span id="qrAmount"></span> VNĐ</p>
+                <p><strong>Nội dung:</strong> <span id="qrContent"></span></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" onclick="closeQrModal()">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const wordsSelect = document.getElementById("words");
+    const originalPriceSpan = document.getElementById("originalPrice");
+    const discountPriceSpan = document.getElementById("discountPrice");
+    const totalPriceSpan = document.getElementById("totalPrice");
+    const costInput = document.getElementById("cost");
+    const username = document.getElementById("username").value;
+
+    function updatePrices() {
+        const selectedOption = wordsSelect.options[wordsSelect.selectedIndex];
+        const cost = parseInt(selectedOption.getAttribute("data-cost"));
+        const words = parseInt(selectedOption.value);
+
+        // Tính toán giá gốc
+        const originalPrice = cost;
+
+        // Tính toán giảm giá (ví dụ: mua càng nhiều càng rẻ)
+        let discount = 0;
+        if (words >= 50000) {
+            discount = originalPrice * 0.2; // Giảm 20%
+        } else if (words >= 10000) {
+            discount = originalPrice * 0.1; // Giảm 10%
+        } else if (words >= 5000) {
+            discount = originalPrice * 0.05; // Giảm 5%
+        }
+
+        const finalPrice = originalPrice - discount;
+
+        originalPriceSpan.textContent = originalPrice.toLocaleString() + 'đ';
+        discountPriceSpan.textContent = discount.toLocaleString() + 'đ';
+        totalPriceSpan.textContent = finalPrice.toLocaleString() + 'đ';
+
+        // Cập nhật giá trị của costInput
+        costInput.value = finalPrice;
+    }
+
+    // Thêm sự kiện change
+    wordsSelect.addEventListener("change", updatePrices);
+
+    // Gọi hàm này ngay khi tải trang để đặt giá trị ban đầu
+    document.addEventListener('DOMContentLoaded', function() {
+        updatePrices();
+    });
+
+    // Xử lý form nạp tiền
+    const topupForm = document.getElementById("topupForm");
+    topupForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const amount = document.getElementById("amount").value;
+        console.log(">>>>>>>>>>>>>>>>>>>>>>"+username)
+        try {
+            const response = await fetch(`/api/payment/qr?username=${encodeURIComponent(username)}&amount=${amount}`);
+
+            if (!response.ok) {
+                const error = await response.json();
+                showNotification(error.message || 'Lỗi khi tạo mã QR', 'error');
+                return;
+            }
+
+            const data = await response.json();
+            showQrModal(data.qrUrl, data.amount, data.transferContent);
+        } catch (error) {
+            showNotification('Lỗi kết nối: ' + error.message, 'error');
+        }
+    });
+
+    function showQrModal(qrUrl, amount, content) {
+        document.getElementById("qrImage").src = qrUrl;
+        document.getElementById("qrAmount").textContent = amount.toLocaleString() + ' VNĐ';
+        document.getElementById("qrContent").textContent = content;
+        document.getElementById("qrModal").style.display = "flex";
+    }
+
+    function closeQrModal() {
+        document.getElementById("qrModal").style.display = "none";
+    }
+
+    function showNotification(message, type) {
+        // Xóa thông báo cũ
+        const oldNotifications = document.querySelectorAll('.notification');
+        oldNotifications.forEach(el => el.remove());
+
+        // Tạo thông báo mới
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+
+        const icon = type === 'success' ? 'check-circle' : 'exclamation-circle';
+        notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+                <button class="close-btn" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+        // Chèn vào đầu trang
+        document.querySelector('.container').prepend(notification);
+
+        // Tự động xóa sau 5 giây
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+
+    // Đóng modal khi nhấn phím ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeQrModal();
+        }
+    });
+
+    // Đóng modal khi click ra ngoài
+    document.getElementById('qrModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeQrModal();
+        }
     });
 </script>
-
 </body>
 </html>

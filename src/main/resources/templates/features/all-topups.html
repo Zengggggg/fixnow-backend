@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tất cả giao dịch nạp tiền</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .btn-confirm {
+            padding: 6px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-confirm:hover {
+            background-color: #218838;
+        }
+        .confirmed {
+            color: green;
+            font-weight: bold;
+        }
+        .not-confirmed {
+            color: orange;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Tất cả giao dịch nạp tiền</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Người dùng</th>
+        <th>Số tiền (VNĐ)</th>
+        <th>Thời gian yêu cầu</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="topup : ${topups}">
+        <td th:text="${topup.user.username}">giang</td>
+        <td th:text="${#numbers.formatDecimal(topup.amount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+        <td th:text="${#temporals.format(topup.requestTime, 'HH:mm dd/MM/yyyy HH:mm')}">29/06/2025</td>
+        <td>
+            <span th:if="${topup.confirmed}" class="confirmed">Đã xác nhận</span>
+            <span th:if="${!topup.confirmed}" class="not-confirmed">Chờ xác nhận</span>
+        </td>
+        <td>
+            <form th:if="${!topup.confirmed}" th:action="@{/admin/confirm}" method="post">
+                <input type="hidden" name="topupId" th:value="${topup.id}" />
+                <button class="btn-confirm" type="submit">Xác nhận</button>
+            </form>
+
+            <span th:if="${topup.confirmed}">✓</span>
+        </td>
+    </tr>
+    <tr th:if="${topups.size() == 0}">
+        <td colspan="5">Không có giao dịch nào</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

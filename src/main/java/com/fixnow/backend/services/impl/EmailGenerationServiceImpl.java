@@ -3,10 +3,17 @@ package com.fixnow.backend.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fixnow.backend.dtos.request.EmailRequest;
 import com.fixnow.backend.dtos.response.EmailResponse;
+import com.fixnow.backend.models.User;
+import com.fixnow.backend.models.UserWallet;
+import com.fixnow.backend.repositories.UserRepository;
+import com.fixnow.backend.repositories.UserWalletRepository;
 import com.fixnow.backend.services.EmailGenerationService;
+import com.fixnow.backend.services.WalletService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -26,6 +33,16 @@ public class EmailGenerationServiceImpl implements EmailGenerationService {
     private String model;
 
     private final WebClient webClient = WebClient.builder().build();
+
+    private final WalletService walletService;
+    private final UserWalletRepository userWalletRepository;
+    private final UserRepository userRepository;
+
+    public EmailGenerationServiceImpl(WalletService walletService, UserWalletRepository userWalletRepository, UserRepository userRepository) {
+        this.walletService = walletService;
+        this.userWalletRepository = userWalletRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public EmailResponse generateEmail(EmailRequest request) {
@@ -79,6 +96,22 @@ public class EmailGenerationServiceImpl implements EmailGenerationService {
                 break;
             }
         }
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+
+        int wordCount = walletService.countWords(emailBody); // Tùy bạn định nghĩa số từ cần trừ
+
+        UserWallet wallet = userWalletRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+        if (wallet.getWordQuota() < wordCount) {
+            throw new RuntimeException("Không đủ từ để thực hiện thao tác");
+        }
+
+        wallet.setWordQuota(wallet.getWordQuota() - wordCount);
+        userWalletRepository.save(wallet);
 
         EmailResponse resp = new EmailResponse();
         resp.setSubject(subject);

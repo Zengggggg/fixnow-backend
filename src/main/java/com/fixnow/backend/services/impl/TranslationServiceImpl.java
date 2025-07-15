@@ -4,11 +4,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fixnow.backend.dtos.request.TransationRequest;
 import com.fixnow.backend.dtos.response.TranslationResponse;
+import com.fixnow.backend.models.User;
+import com.fixnow.backend.models.UserWallet;
+import com.fixnow.backend.repositories.UserRepository;
+import com.fixnow.backend.repositories.UserWalletRepository;
 import com.fixnow.backend.services.TranslationService;
+import com.fixnow.backend.services.WalletService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,8 +35,22 @@ public class TranslationServiceImpl implements TranslationService {
     private final WebClient webClient = WebClient.create();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final UserRepository userRepository;
+    private final UserWalletRepository walletRepository;
+    private final WalletService walletService;
+
+    public TranslationServiceImpl(UserRepository userRepository, UserWalletRepository walletRepository, WalletService walletService) {
+        this.userRepository = userRepository;
+        this.walletRepository = walletRepository;
+        this.walletService = walletService;
+    }
+
     public String translate(String sourceText, String targetLanguage) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
         try {
+
+
             String prompt = String.format("Translate the following text to %s:\n%s", targetLanguage, sourceText);
 
             Map<String, Object> requestBody = Map.of(
@@ -50,6 +71,26 @@ public class TranslationServiceImpl implements TranslationService {
                     .block();
 
             JsonNode root = objectMapper.readTree(response);
+            String translated = root.path("choices").get(0).path("message").path("content").asText().trim();
+
+            // Đếm từ của kết quả dịch
+            int wordCount = walletService.countWords(translated);
+
+            // Lấy user và wallet
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+
+            UserWallet wallet = walletRepository.findByUser(user)
+                    .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+            // Trừ từ
+            if (wallet.getWordQuota() < wordCount) {
+                throw new IllegalStateException("Không đủ từ để thực hiện dịch.");
+            }
+
+            wallet.setWordQuota(wallet.getWordQuota() - wordCount);
+            walletRepository.save(wallet);
+
             return root.path("choices").get(0).path("message").path("content").asText().trim();
 
         } catch (Exception e) {

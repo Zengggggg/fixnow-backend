@@ -1,9 +1,16 @@
 package com.fixnow.backend.services.impl;
 
 import com.fixnow.backend.dtos.request.ParaphraseRequest;
+import com.fixnow.backend.models.User;
+import com.fixnow.backend.models.UserWallet;
+import com.fixnow.backend.repositories.UserRepository;
+import com.fixnow.backend.repositories.UserWalletRepository;
 import com.fixnow.backend.services.ParaphraseService;
+import com.fixnow.backend.services.WalletService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -20,6 +27,16 @@ public class ParaphraseServiceImpl implements ParaphraseService {
     private String apiUrl;
 
     private final WebClient webClient = WebClient.builder().build();
+
+    private final UserRepository userRepository;
+    private final UserWalletRepository walletRepository;
+    private final WalletService walletService;
+
+    public ParaphraseServiceImpl(UserRepository userRepository, UserWalletRepository walletRepository, WalletService walletService) {
+        this.userRepository = userRepository;
+        this.walletRepository = walletRepository;
+        this.walletService = walletService;
+    }
 
     @Override
     public String paraphrase(ParaphraseRequest request) {
@@ -54,7 +71,25 @@ public class ParaphraseServiceImpl implements ParaphraseService {
             if (content == null) {
                 return "Paraphrased content is null.";
             }
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
+            String result = content.trim();
+
+
+            int wordCount = walletService.countWords(result);
+
+
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+            UserWallet wallet = walletRepository.findByUser(user)
+                    .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+            if (wallet.getWordQuota() < wordCount) {
+                throw new IllegalStateException("Không đủ từ để thực hiện paraphrase.");
+            }
+
+            wallet.setWordQuota(wallet.getWordQuota() - wordCount);
+            walletRepository.save(wallet);
             return content.trim();
 
         }  catch (Exception e) {

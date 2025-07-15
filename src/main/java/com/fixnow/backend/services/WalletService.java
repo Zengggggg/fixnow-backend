@@ -8,5 +8,6 @@ public interface WalletService {
     void purchaseWords(User user, int words, double cost);
     void consumeWords(User user, int wordsToConsume);
     UserWallet getWallet(User user);
-
+    void topUp(User user, double amount);
+    int countWords(String word);
 }

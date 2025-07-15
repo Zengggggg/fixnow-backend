@@ -57,7 +57,9 @@ public class SecurityConfig {
 
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http,
+                                    CustomLoginSuccessHandler successHandler
+    ) throws Exception {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
@@ -71,7 +73,11 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",
                                 "/summarizer","/summarize","/translate","/translation"
-                        ).hasRole("FREE")// Các trang không cần đăng nhập
+                        ).hasRole("FREE")
+                        .requestMatchers(
+                                "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",
+                                "/summarizer","/summarize","/translate","/translation","/admin/**"
+                        ).hasRole("ADMIN")
                         .anyRequest().authenticated() // Các trang khác yêu cầu đăng nhập
                 )
                 .csrf(csrf -> csrf.disable())
@@ -80,7 +86,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")  // Dùng "email" thay vì "username"
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/paraphraser", true) // Sau khi login thành công thì vào /
+                        .successHandler(successHandler) // Sau khi login thành công thì vào /
                         .failureHandler(customAuthFailureHandler) // 👈 DÙNG BEAN THỰC TẾ
                         .permitAll()
                 )

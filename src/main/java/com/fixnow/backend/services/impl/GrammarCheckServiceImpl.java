@@ -4,10 +4,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fixnow.backend.dtos.response.GrammarError;
+import com.fixnow.backend.models.User;
+import com.fixnow.backend.models.UserWallet;
+import com.fixnow.backend.repositories.UserRepository;
+import com.fixnow.backend.repositories.UserWalletRepository;
 import com.fixnow.backend.services.GrammarCheckService;
+import com.fixnow.backend.services.WalletService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -26,6 +33,10 @@ public class GrammarCheckServiceImpl implements GrammarCheckService {
 
     private final WebClient webClient = WebClient.builder().build();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final UserRepository userRepository;
+    private final UserWalletRepository walletRepository;
+    private final WalletService walletService;
 
 
     @Override
@@ -49,6 +60,23 @@ public class GrammarCheckServiceImpl implements GrammarCheckService {
                     .retrieve()
                     .bodyToMono(String.class)
                     .block(); // Blocking for simplicity; change to reactive if needed
+
+            int wordCount = walletService.countWords(text);
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+
+
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+            UserWallet wallet = walletRepository.findByUser(user)
+                    .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+            if (wallet.getWordQuota() < wordCount) {
+                throw new IllegalStateException("Không đủ từ để kiểm tra ngữ pháp.");
+            }
+
+            wallet.setWordQuota(wallet.getWordQuota() - wordCount);
+            walletRepository.save(wallet);
 
             return parseAndEnrichErrors(text,response);
         } catch (Exception e) {
