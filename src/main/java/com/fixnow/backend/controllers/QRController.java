@@ -22,9 +22,9 @@ public class QRController {
     private final UserService userService;
     private final TopUpRequestRepository topUpRequestRepository;
 
-    private static final String BANK_CODE = "TPB";
-    private static final String ACCOUNT_NUMBER = "00000116625";
-    private static final String ACCOUNT_NAME = "HOANG VINH GIANG";
+    private static final String BANK_CODE = "MB";
+    private static final String ACCOUNT_NUMBER = "1510239235999";
+    private static final String ACCOUNT_NAME = "HA THU TRANG";
 
     public QRController(UserService userService, TopUpRequestRepository topUpRequestRepository) {
         this.userService = userService;
@@ -35,7 +35,7 @@ public class QRController {
     public Map<String, String> getPaymentQr(@RequestParam String username, @RequestParam double amount) {
 
         User user = userService.findByEmail(username); //username này thực ra l email
-        String content = "fixnow-" + user.getUsername(); // đây mới l username thật
+        String content = "fixnow-" + user.getUsername(); // đây mới là username thật
         String encodedInfo = UriUtils.encode(content, StandardCharsets.UTF_8);
         String encodedName = UriUtils.encode(ACCOUNT_NAME, StandardCharsets.UTF_8);
 
