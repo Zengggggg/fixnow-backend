@@ -97,6 +97,7 @@ public class AuthController {
             UserWallet wallet = new UserWallet();
             wallet.setBalance(0.0); // hoặc giá trị mặc định của bạn
             wallet.setWordQuota(0);
+            wallet.setUser(user);
             userWalletRepository.save(wallet);
             user.setWallet(wallet);
             user.setEnabled(true);

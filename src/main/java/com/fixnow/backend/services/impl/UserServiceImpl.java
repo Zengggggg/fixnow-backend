@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailVerifyService emailVerifyService;
+    private final UserWalletRepository userWalletRepository;
 
     @Override
     public UserResponseDto registerUser(UserRegistrationDto registrationDto, HttpServletRequest request) {
@@ -67,7 +68,9 @@ public class UserServiceImpl implements UserService {
         newUser.setRole(freemiumRole);
         newUser.setEnabled(false);
 
+
         User savedUser = userRepository.save(newUser);
+
 
         String token = UUID.randomUUID().toString();
         VerificationToken vt = new VerificationToken();
