@@ -40,6 +40,17 @@
             color: orange;
             font-style: italic;
         }
+        .btn-delete {
+            padding: 6px 12px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
     </style>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-X18WB21C4R"></script>
@@ -75,12 +86,22 @@
             <span th:if="${!topup.confirmed}" class="not-confirmed">Chờ xác nhận</span>
         </td>
         <td>
-            <form th:if="${!topup.confirmed}" th:action="@{/admin/confirm}" method="post">
-                <input type="hidden" name="topupId" th:value="${topup.id}" />
-                <button class="btn-confirm" type="submit">Xác nhận</button>
-            </form>
+            <div style="display: flex; justify-content: center; gap: 8px;">
+                <!-- Nút Xác nhận -->
+                <form th:if="${!topup.confirmed}" th:action="@{/admin/confirm}" method="post">
+                    <input type="hidden" name="topupId" th:value="${topup.id}" />
+                    <button class="btn-confirm" type="submit">Xác nhận</button>
+                </form>
 
-            <span th:if="${topup.confirmed}">✓</span>
+                <!-- Nút Xóa chỉ hiển thị khi chưa xác nhận -->
+                <form th:if="${!topup.confirmed}" th:action="@{/admin/delete}" method="post">
+                    <input type="hidden" name="topupId" th:value="${topup.id}" />
+                    <button class="btn-delete" type="submit" onclick="return confirm('Bạn có chắc muốn xóa giao dịch này?')">Xóa</button>
+                </form>
+
+                <!-- Dấu check nếu đã xác nhận -->
+                <span th:if="${topup.confirmed}">✓</span>
+            </div>
         </td>
     </tr>
     <tr th:if="${topups.size() == 0}">

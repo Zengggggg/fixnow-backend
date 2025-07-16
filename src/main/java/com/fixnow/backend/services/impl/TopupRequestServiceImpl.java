@@ -33,4 +33,9 @@ public class TopupRequestServiceImpl implements TopupRequestService {
 
         walletService.topUp(request.getUser(), request.getAmount());
     }
+
+    @Override
+    public void cancelTopupRequest(Long id) {
+        topupRequestRepository.deleteById(id);
+    }
 }

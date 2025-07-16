@@ -51,6 +51,11 @@ public class AdminController {
         requestService.confirmTopupRequest(topupId);
         return "redirect:/admin"; // Adjust if your view path differs
     }
+    @PostMapping("/delete")
+    public String deleteTopup(@RequestParam("topupId") Long topupId) {
+        requestService.cancelTopupRequest(topupId); // hoặc repo.deleteById(topupId);
+        return "redirect:/admin";
+    }
 
 
 }
