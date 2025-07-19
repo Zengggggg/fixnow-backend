@@ -1,5 +1,6 @@
 package com.fixnow.backend.controllers;
 
+import com.fixnow.backend.dtos.request.ChangePasswordDto;
 import com.fixnow.backend.dtos.request.LoginRequestDto;
 import com.fixnow.backend.dtos.request.UserRegistrationDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
@@ -160,30 +163,22 @@ public class AuthController {
         return "auth/login"; // maps to /WEB-INF/views/auth/login.html
     }
 
-    @GetMapping("/update")
-    public String showUpdateForm(Model model, @RequestParam("id") Long id) {
-        User user = userService.findById(id); // Assumes a method to fetch user
-        model.addAttribute("user", user);
-        return "update-user"; // View name (e.g., update-user.html)
-    }
+    @PatchMapping("/update")
+    public ResponseEntity<?> patchUser(@RequestBody UserUpdateDto request, Principal principal) {
+        String currentUsername = principal.getName(); // lấy từ người đang đăng nhập
 
-    @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") UserUpdateDto updateDto,
-                             RedirectAttributes redirectAttributes) {
-        try {
-            userService.updateUser(JwtUtil.getCurrentUserId(), updateDto);
-            redirectAttributes.addFlashAttribute("success", "User updated successfully.");
-            return "redirect:/home";
-        } catch (jakarta.persistence.EntityNotFoundException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/update?id=" + JwtUtil.getCurrentUserId();
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/update?id=" + JwtUtil.getCurrentUserId();
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to update user.");
-            return "redirect:/update?id=" + JwtUtil.getCurrentUserId();
+        boolean success = userService.patchField(currentUsername, request.getField(), request.getValue());
+        if (success) {
+            return ResponseEntity.ok().body(Map.of("message", "Cập nhật thành công"));
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("message", "Trường không hợp lệ hoặc lỗi dữ liệu"));
         }
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto dto, Principal principal) {
+        String username = principal.getName();
+        userService.changePassword(username, dto);
+        return ResponseEntity.ok("Đổi mật khẩu thành công");
     }
 
     @PostMapping("/google")

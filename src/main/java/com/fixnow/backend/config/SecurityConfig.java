@@ -72,7 +72,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(
                                 "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",
-                                "/summarizer","/summarize","/translate","/translation"
+                                "/summarizer","/summarize","/translate","/translation","/profile","/update",
+                                "/change-password"
                         ).hasRole("FREE")
                         .requestMatchers(
                                 "/paraphraser","/paraphrase","/grammar_checker","/grammar_check",

@@ -1,5 +1,6 @@
 package com.fixnow.backend.services.impl;
 
+import com.fixnow.backend.dtos.request.ChangePasswordDto;
 import com.fixnow.backend.dtos.request.UserRegistrationDto;
 import com.fixnow.backend.dtos.response.UserResponseDto;
 import com.fixnow.backend.dtos.request.UserUpdateDto;
@@ -21,6 +22,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,6 +99,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void changePassword(String username, ChangePasswordDto dto) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại"));
+
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Mật khẩu hiện tại không chính xác");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean patchField(String currentUsername, String field, String value) {
+        Optional<User> optionalUser = userRepository.findByEmail(currentUsername);
+        if (optionalUser.isEmpty()) return false;
+
+        User user = optionalUser.get();
+
+        switch (field) {
+            case "username":
+                user.setUsername(value);
+                break;
+            case "firstName":
+                user.setFirstName(value);
+                break;
+            case "lastName":
+                user.setLastName(value);
+                break;
+            case "discountRate":
+                try {
+                    user.setDiscountRate(Double.parseDouble(value));
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+                break;
+            // nếu muốn hỗ trợ update enabled, provider, v.v. thì thêm tiếp
+            default:
+                return false; // field không hợp lệ
+        }
+
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
@@ -115,32 +163,32 @@ public class UserServiceImpl implements UserService {
         // Consider returning Optional<User> or handling UserNotFoundException specifically
     }
 
-    @Override
-    @Transactional
-    public UserResponseDto updateUser(Long id, UserUpdateDto updateDto) {
-        // Authentication/Authorization check should happen here in a real app
-        // For now, we just find the user by ID
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-
-        // Update email if provided and different
-        if (updateDto.getEmail() != null && !updateDto.getEmail().isEmpty() && !updateDto.getEmail().equals(existingUser.getEmail())) {
-             // Check if the new email is already taken by another user
-            if (userRepository.existsByEmail(updateDto.getEmail())) {
-                 throw new IllegalArgumentException("Email already exists");
-            }
-            existingUser.setEmail(updateDto.getEmail());
-        }
-
-        // Update password if provided
-        if (updateDto.getPassword() != null && !updateDto.getPassword().isEmpty()) {
-            // In a real app, you might want to verify the user's current password first
-            existingUser.setPassword(passwordEncoder.encode(updateDto.getPassword()));
-        }
-
-        User updatedUser = userRepository.save(existingUser);
-        return mapUserToResponseDto(updatedUser);
-    }
+//    @Override
+//    @Transactional
+//    public UserResponseDto updateUser(Long id, UserUpdateDto updateDto) {
+//        // Authentication/Authorization check should happen here in a real app
+//        // For now, we just find the user by ID
+//        User existingUser = userRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+//
+//        // Update email if provided and different
+//        if (updateDto.getEmail() != null && !updateDto.getEmail().isEmpty() && !updateDto.getEmail().equals(existingUser.getEmail())) {
+//             // Check if the new email is already taken by another user
+//            if (userRepository.existsByEmail(updateDto.getEmail())) {
+//                 throw new IllegalArgumentException("Email already exists");
+//            }
+//            existingUser.setEmail(updateDto.getEmail());
+//        }
+//
+//        // Update password if provided
+//        if (updateDto.getPassword() != null && !updateDto.getPassword().isEmpty()) {
+//            // In a real app, you might want to verify the user's current password first
+//            existingUser.setPassword(passwordEncoder.encode(updateDto.getPassword()));
+//        }
+//
+//        User updatedUser = userRepository.save(existingUser);
+//        return mapUserToResponseDto(updatedUser);
+//    }
     @Override
     public User findOrCreateGoogleUser(String email, String name){
         Optional<User> existingUser = userRepository.findByEmail(email);

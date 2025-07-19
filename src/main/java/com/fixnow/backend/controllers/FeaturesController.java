@@ -73,6 +73,18 @@ public class FeaturesController {
         model.addAttribute("userEmail", email);
         return "support/contact_us";
     }
+    @GetMapping("/profile")
+    public String showProfileForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        com.fixnow.backend.models.User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        model.addAttribute("user", user);
+        model.addAttribute("full_name", user.getFirstName() + " " + user.getLastName());
+        model.addAttribute("wallet", user.getWallet());
+        return "features/profile";
+
+    }
 
 
 }

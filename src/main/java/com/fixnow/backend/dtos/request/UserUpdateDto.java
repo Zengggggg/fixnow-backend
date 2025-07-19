@@ -5,6 +5,20 @@ import lombok.Data;
 @Data
 public class UserUpdateDto {
     // We might not want to allow username changes easily.
-    private String email; // Allow email update
-    private String password; // Allow password update (provide current password for verification in service)
+    private String field;
+    private String value;
+
+    // Getters và Setters
+    public String getField() {
+        return field;
+    }
+    public void setField(String field) {
+        this.field = field;
+    }
+    public String getValue() {
+        return value;
+    }
+    public void setValue(String value) {
+        this.value = value;
+    }
 } 
