@@ -35,12 +35,17 @@ public class WalletController {
 
     @PostMapping("/purchase")
     public String purchaseWords(@RequestParam int words,
-                                @RequestParam double cost,
+                                @RequestParam double finalCost,
                                 Principal principal,
                                 Model model) {
         try {
             User user = userService.findByEmail(principal.getName());
-            walletService.purchaseWords(user, words, cost);
+
+            // Áp dụng giảm giá nếu có
+
+
+            walletService.purchaseWords(user, words, finalCost);
+
             model.addAttribute("success", "Mua gói từ thành công!");
         } catch (Exception e) {
             model.addAttribute("error", "Lỗi: " + e.getMessage());

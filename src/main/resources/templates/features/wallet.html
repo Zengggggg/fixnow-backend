@@ -609,7 +609,17 @@
     <!-- Mua từ -->
     <div id="purchaseForm" class="form-section">
         <h3><i class="fas fa-shopping-cart"></i> Mua thêm từ</h3>
+        <div class="form-group">
+            <label for="discountCode">Mã giảm giá:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="discountCode" class="form-control" placeholder="Nhập mã giảm giá">
+                <button type="button" class="btn btn-success" onclick="applyDiscount()">Áp dụng</button>
+            </div>
+        </div>
+        <input type="hidden" id="discountRate" th:value="${user.discountRate}" />
+
         <form id="purchaseForm" method="post" action="/purchase">
+
             <div class="form-group">
                 <label for="words">Chọn gói từ:</label>
                 <div class="select-wrapper">
@@ -623,9 +633,13 @@
             </div>
 
             <input type="hidden" id="cost" name="cost" value="5000" />
+            <input type="hidden" id="finalCost" name="finalCost" value="5000" />
+
+
 
             <div class="form-group">
                 <p>Tổng cộng: <strong id="totalPrice">5.000đ</strong></p>
+                <p>Giá sau giảm: <strong id="discountedPrice">5.000đ</strong></p>
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">
@@ -660,18 +674,25 @@
 
 <script th:inline="javascript">
     const wordsSelect = document.getElementById("words");
-    const originalPriceSpan = document.getElementById("originalPrice");
-    const discountPriceSpan = document.getElementById("discountPrice");
+
     const totalPriceSpan = document.getElementById("totalPrice");
     const costInput = document.getElementById("cost");
     const username = document.getElementById("username").value;
+    const discountRateElement = document.getElementById("discountRate");
+    const discountRate = parseFloat(discountRateElement?.value || 0); // nếu rỗng thì mặc định là 0
 
     function updatePrices() {
         const selectedOption = wordsSelect.options[wordsSelect.selectedIndex];
-        const cost = parseInt(selectedOption.getAttribute("data-cost"));
+        const baseCost = parseInt(selectedOption.getAttribute("data-cost"))*(1-discountRate);
 
-        totalPriceSpan.textContent = cost.toLocaleString() + 'đ';
-        costInput.value = cost;
+
+        const discounted = Math.round(baseCost * (1 - currentDiscountPercent / 100));
+
+        totalPriceSpan.textContent = baseCost.toLocaleString() + 'đ';
+        document.getElementById("discountedPrice").textContent = discounted.toLocaleString() + 'đ';
+
+        costInput.value = baseCost;
+        document.getElementById("finalCost").value = discounted;
     }
 
     // Thêm sự kiện change
@@ -756,6 +777,36 @@
             closeQrModal();
         }
     });
+    let currentDiscountPercent = 0; // Mặc định chưa giảm
+
+    async function applyDiscount() {
+        const code = document.getElementById("discountCode").value.trim();
+        if (!code) {
+            showNotification("Vui lòng nhập mã giảm giá!", "error");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/discount/validate?code=${encodeURIComponent(code)}`);
+            if (!response.ok) {
+                const error = await response.json();
+                showNotification(error.message || "Mã giảm giá không hợp lệ", "error");
+                currentDiscountPercent = 0;
+                updatePrices();
+                return;
+            }
+
+            const data = await response.json();
+            currentDiscountPercent = data.percent; // Ví dụ: 10, 20,...
+            showNotification(`Áp dụng mã giảm ${currentDiscountPercent}% thành công!`, "success");
+            updatePrices();
+
+        } catch (e) {
+            showNotification("Không thể xác minh mã giảm giá", "error");
+            currentDiscountPercent = 0;
+            updatePrices();
+        }
+    }
 </script>
 </body>
 </html>

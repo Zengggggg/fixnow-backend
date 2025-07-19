@@ -1,14 +1,18 @@
 package com.fixnow.backend.config;
 
+import com.fixnow.backend.models.DiscountCode;
 import com.fixnow.backend.models.Role;
 import com.fixnow.backend.models.User;
 import com.fixnow.backend.mun.Provider;
+import com.fixnow.backend.repositories.DiscountCodeRepository;
 import com.fixnow.backend.repositories.RoleRepository;
 import com.fixnow.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -19,6 +23,8 @@ public class DataInitializer implements CommandLineRunner {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private DiscountCodeRepository discountCodeRepository;
 
     @Override
     public void run(String... args) {
@@ -55,6 +61,35 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
             System.out.println("✅ Admin user created!");
         }
+        if (!discountCodeRepository.findById("GIAM10").isPresent()) {
+            DiscountCode code = new DiscountCode();
+            code.setCode("GIAM10");
+            code.setPercent(10);
+            code.setActive(true);
+            code.setExpiryDate(LocalDateTime.now().plusDays(30));
+            discountCodeRepository.save(code);
+        }
+
+        if (!discountCodeRepository.findById("GIAM20").isPresent()) {
+            DiscountCode code = new DiscountCode();
+            code.setCode("GIAM20");
+            code.setPercent(20);
+            code.setActive(true);
+            code.setExpiryDate(LocalDateTime.now().plusDays(15));
+            discountCodeRepository.save(code);
+        }
+
+        if (!discountCodeRepository.findById("FIXNOW50").isPresent()) {
+            DiscountCode code = new DiscountCode();
+            code.setCode("FIXNOW50");
+            code.setPercent(50);
+            code.setActive(true);
+            code.setExpiryDate(LocalDateTime.now().plusDays(7));
+            discountCodeRepository.save(code);
+        }
+
+        System.out.println("✅ Discount codes seeded!");
     }
+
 }
 

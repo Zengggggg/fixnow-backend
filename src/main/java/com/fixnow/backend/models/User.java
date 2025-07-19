@@ -40,6 +40,9 @@ public class User {
 
     private String providerId;
 
+    @Column(name = "discount_rate", nullable = false)
+    private Double discountRate = 0.0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
