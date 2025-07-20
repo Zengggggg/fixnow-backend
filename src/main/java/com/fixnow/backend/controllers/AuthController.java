@@ -99,7 +99,7 @@ public class AuthController {
         if (user.getWallet() == null) {
             UserWallet wallet = new UserWallet();
             wallet.setBalance(0.0); // hoặc giá trị mặc định của bạn
-            wallet.setWordQuota(0);
+            wallet.setWordQuota(1000);
             wallet.setUser(user);
             userWalletRepository.save(wallet);
             user.setWallet(wallet);
